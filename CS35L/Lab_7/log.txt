@@ -1,0 +1,74 @@
+The purpose of this lab is to use Beaglebone Green Wireless Development
+Board as a linux server, and to practice on it the ssh protocol. 
+
+There are a few extra setup steps involved for this lab because I am 
+using a pre-owned beaglebone. I followed the instructions posted on
+the company's website to flash the on-board storage. So I downloaded
+the lastest debian image for the board, burned it into a micro SD card, 
+then used the card to write into the board's flash memory. This process
+took around ten minutes. Afterwards, I just rebooted the beaglebone and
+it is ready to connect via wifi. 
+
+My lab partner is Alex Zhao
+
+# logon to beaglebone as root
+
+ssh root@192.168.8.1
+
+# update the apt utility
+
+apt update
+
+# install firefox based browser
+
+apt-get install firefox-esr-l10n-en-gb
+
+# install xauth
+
+apt-get insatall openssh-server
+
+# install openssh-server
+
+apt-get install openssh-server
+
+# create account for Alex
+
+sudo useradd -d /home/alexzhao -m alexzhao
+sudo passwd alexzhao
+
+password: 123456
+
+# set up .ssh folder
+cd /home/partner/
+mkdir .ssh
+chown -R partner .ssh
+chmod 700 .ssh
+
+# use ifconfig command to determine the ip address of the beaglebone
+inet addr: 172.29.22.185
+
+# generate RSA key using defaults, stored in .ssh/id_rsa
+ssh-keygen
+
+
+
+# The following steps are performed on the local computer
+
+# create another private, public key pair
+ssh-keygen
+
+# upload public key to server
+ssh-copy-id -i yuanpingsong@172.29.22.185
+
+# add private key to ssh-agent
+ssh-add
+
+# Now log in, No password or passphrase is required! 
+ssh yuanpingsong@172.29.22.185
+
+# Test X11 forwarding
+ssh -Y yuanpingsong@172.29.22.185
+
+
+
+

@@ -1,0 +1,38 @@
+NAME: Yuanping Song
+EMAIL: yuanping.song@outlook.com
+ID: 
+SLIPDAYS: 0
+
+The files that are included in my submission are as follows:
+
+lab1a.c: the source file of my program, including the main funciton. 
+The program is capable of accepting a command line argument --shell 
+and lauch two processes so as to be able to run shell commands while 
+accepting user input. 
+
+Makefile: script automating the building of the lab1a executable and 
+the packaging of project files
+
+README: this file. Contains a description of the files included in 
+the tarball as well as some general informaiton relating to my 
+submission.
+
+Design Decision:
+
+I made a design decision to stop echoing stdin after my program, invoked
+with --shell option, encounters a ^D, because the characters which follow
+will not be sent to the shell. So it would misinform the user if they
+are echoed back to the terminal. Rather, if the user types really fast and
+the system runs very slowly, it would appear that the characters entered
+after ^D had no effect. This approach effectively effectively eliminates
+the need for a sigpipe handler. however, one is still included in the 
+program for robustness. 
+
+Research:
+
+While implementing this program, I extensively consulted the man pages of
+related functions for calling interface as well as usage examples. I also 
+came across a good introduction to the use of termios on wikibooks:
+https://en.wikibooks.org/wiki/Serial_Programming/termios
+as well as a tutorial on poll by IBM: 
+https://www.ibm.com/support/knowledgecenter/en/ssw_ibm_i_71/rzab6/poll.htm

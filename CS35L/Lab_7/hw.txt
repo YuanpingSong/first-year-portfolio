@@ -1,0 +1,37 @@
+1. 
+if other teams have been evasdropping on all network traffic, the ssh tunnel 
+is still secure because knowing about the public key of the client and the 
+server reveals nothing about their private keys. Therefore, a hacker gains no 
+knowlege of how to crack the encrypted network. 
+
+if the keyboard has also been hacked, the opposing teams would have gained the 
+passphrase protecting the private key. However, the correspondence of this 
+passphrase to this private key is internal to our devices. The other teams
+cannot simply use the same passphrase and dream of reproducing the same private
+key on their machines. Therefore, our network is still secure. 
+
+tapping the usb over which our computers boot means the opposing teams have 
+complete access to file stored on our boot drives. If our private key is also 
+stored there, our network may be compromised since the opposing team can easily 
+decrypt the key using the passphrase they just obtained. On the other hand, if the 
+private key is not located on the boot drive, then there is still no way for
+the opposing team to decrypt the secure tunneling. 
+
+However, having physical access to the usb gives other teams the oppurtunity to
+potentially inject exploit code into the boot process, and somehow obtain the 
+information they are looking for (i.e. our private keys or other sensitive 
+informaiton). 
+
+2. 
+what the gpg2 --verify command does is that it only makes sure that eeprom was signed
+using the private key that corresponds to hw-pubkey.asc. It does not guarantee that I personally created the file because anyone can create a pair of public and private 
+keys that goes under my name. They can create eeprom.sig using their private key
+and distribute it along with their public key. In this latter scenario, the 
+verification would also be successful. 
+
+One way to bridge the schism between the key the its creator is to use a network of
+trust, as described in Gnu Privacy Guard's online documentation. This is to say, 
+other people should be able to sign my public key, affirming that they have 
+verified through some other means that this public key indeed belongs to me. 
+Others can keep a list of keys that they already trust and have new keys added
+to this list if it is introduced by an trusted key. 

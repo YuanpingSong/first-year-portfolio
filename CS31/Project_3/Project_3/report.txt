@@ -1,0 +1,96 @@
+A. The first challenge I encountered is to settle down on the overall design of my program. I contemplated using an object-oriented approach, creating my own classes for notes and beats. However, I later found it unnecessary to do so and decided on using functions instead. Then, the biggest challenge I have is to divide the labor among my functions, and to determine what types of inputs they need and what type of outputs and side effects they should produce. Next, coming up with an algorithm which extract notes from a beat string is a little difficult. And lastly, since I did not use an object-oriented approach, I wondered about how to represent data with my data most descriptively, and found a three-dimensional vector of characters to be a good representation of a valid songString. 
+
+B.
+My program divides the assigned task as follows:
+
+A function of return type bool determines whether a given string is a valid representation of a note and stores three pieces of data (note letter, accidental sign, octave) into a one-dimensional vector of characters. (Since chars are basically ints, there is no problem representing octave in this way). 
+A function of return type bool determines whether a given string is a valid representation of a beat made up of zero or more notes and stores data into a vector of notes or a two dimensional vector of characters.
+A function of return type bool determines whether a given string is a valid representation of a song string made up of zero or more beats, each consisting of zero or more notes, and stores data into a vector of beats or a three dimensional vector of characters.
+
+The returned value of the last function is identical to the desired output of the hasCorrectSyntax function. So the last function is called in the body of the hasCorrectSyntax function and the former’s output is returned by the later. 
+
+The encodeString function uses the last function to determine whether a string is a syntactically correct song string and returns 1 if it is not. If the string is a song string, then encodeString uses the three dimensional vector obtained by calling the last function and feed the data to encodeNote, which can decide if a note is playable. The body of encodeString is responsible for formatting the instructions string as well as keeping track of the location of a badBeat, should it occur. 
+
+In pseudoCode, the above mentioned functions are implemented as follows:
+
+Note parser (1st function):
+If string’s size = 1
+	return false if string is not a character from A to G
+	otherwise, put string , ‘ ‘, and 4 into vector and return ture
+If string’s size = 2
+	if string is a character from A to G follow by an accidental sign or a digit, store data to vector and return true
+	otherwise, return false
+If string’s size = 3
+	is string is a character from A to G followed by an accidental sign and by a digit, store data to vector and return true
+	otherwise, return false
+If string’s size is anything else, return false. 
+
+Beat parser (2nd function): 
+Iterate over all the characters in a string
+	length equals one
+ 	while substring at index with length is a note
+		increment length
+	decrement length
+	add substring at index with length to vector
+	add length to index
+	length equals 1
+If index now equals to the size of string, then the string is made of valid notes, return true
+Otherwise, return false. 
+
+Song String Parser (3rd function)
+If string is not empty and is not terminated by a slash, return false
+Otherwise, separate string using forward slash as delimiter. 
+if each string is a valid beat, store each beat (a two dimensional vector of characters) into a vector
+Otherwise, return false. 
+
+hasCorrectSyntax:
+Return the value of the song string parser. 
+
+EncodeSong: 
+Call song string parser and obtain 3D vector
+If the string is not a valid song string
+	return 1
+Otherwise, 
+	iterate over each beat
+		if beat has no notes
+			add a space to instruction
+		if beat has two or more notes
+			add open bracket
+		iterate over each note
+			call encode 
+				if encounters a bad beat
+					set badBeat to this beat
+					return 2
+				otherwise, add the result of encode function to instructions
+		if beat has two or more notes
+			add a close bracket
+	return 0 (this only happens if all of the notes are playable)
+	
+	
+C. 
+Test Data
+
+The hasCorrectSyntax function needs to detect the various ways a song string can deviate from its syntax and also needs to handle special cases of defined syntax.
+First, the function need to realize an empty string is a valid song string. 
+Second, any other string can fail to conform to the standard by being improperly delimited. i.e. not terminated by a forward slash.
+Third, a beat must be made of zero or more notes and nothing else. 
+Fourth, a note must have one of four formats. 
+
+Therefore, the following test cases can extensively test the correctSyntax function
+
+“” Empty string
+“ABCDEFG” not a beat therefore not a song string
+“AB/CD/E./FG/“ the third beat is made of a note plus something else, which is not syntactically correct.
+“ABCDE/“ note format 1
+“A1B2C3D4E5/“ note format 2
+“A#BbC#DbE#/“ note format 3
+“A#1Bb2C#3Db4E#5” note format 4
+“AB2C#Db4/“ mixed format
+“H/” incorrect note letter
+“C10/” incorrect octave
+“C+/” incorrect accidental
+“c/“ incorrect capitalization
+“C4#/” incorrect syntax
+
+The encodeSong function also needs to determine if a function is a song string. Therefore, it should be tested with the above-listed cases. Additionally, it needs to detect the presence of bad bits. Therefore, particular attention should be paid to cases “A1B2C3D4E5/“ and “A#1Bb2C#3Db4E#5” which should change the value of badBeat to 1. Testing this function also involves checking the returned values and that if the reference parameters are modified only as required. 
+	

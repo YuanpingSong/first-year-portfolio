@@ -1,0 +1,12 @@
+Q1: The patch makes the ls command less efficient because it has to now 
+process both -a and -A instead of allowing -a to override -A. 
+
+Q2: I need to watch out for programs that depends on the overriding behavior 
+of the unpatched ls.
+
+
+Q3: the program throws an index our of range error because calling random.choice 
+with an empty list raises IndexError.
+
+Q4: the python interpreptor gives a syntax error at line 65 because the ability 
+to unpack IOError object as a tuple has been deprecated in python 3

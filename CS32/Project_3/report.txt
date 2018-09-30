@@ -1,0 +1,426 @@
+1. Function Descriptions
+
+Files: Actor.cpp Actor.h
+
+class Actor
+
+Actor(StudentWorld* world, int imageID, double startX, double startY, int dir = 0, double size = 1.0, int depth = 0, bool isAlive = true);
+/* The constructor of class Actor which accepts the arguments necessary to initialize the graphObject base class as well as two additional ones to initialize it own date members: a pointer to the StudentWorld object the actor is located in and a boolean value signifying whether the Actor is currently alive. Reasonable default values are provided where it makes sense to do so. Constructors are never virtual, plus GraphObject does not have a default constructor, which necessitates a custom constructor in its derived classes. */
+
+virtual ~Actor() { }
+/* a trivial virtual destructor which enables polymorphism with Actor and its derived classes. Destructors cannot be pure virtual. */
+
+virtual bool willActOn(Actor * target) const = 0; 
+/* returns a boolean value indicating whether this actor will interact with target and be consumed in the process. I chose to make this function pure virtual because every Actor would be able to tell whether an interaction would occur, and the exact answer depends on the identity of the calling object and the target */
+
+virtual void actOn(Actor * target) = 0; 
+/* Let the Actor perform some action on target and be destroyed in the process. This function is pure virtual because every actor is potentially capable of some action, and the exact specialized behavior should be defined by derived classes. */
+    
+virtual void doSomething() = 0;
+/* this function allows an actor to change its position during each tick. It is pure virtual because every actor has a built-in algorithm for determining its motion that is subclass-specific.
+
+// the following set of functions establishes the identity of each actor object. They are defined pure virtual because each actor has a specialized identity.
+virtual bool isProjectile() const = 0;
+// only objects of the projectile subclass return true
+    
+virtual bool isShip() const = 0;
+// only objects of the Ship subclass return true
+   
+virtual bool isGoodie() const  = 0;
+// only objects of the Goodie subclass return true
+    
+virtual bool isFriendly() const  = 0;
+// NachenBlaster and NachenBlaster-Fired Projectiles return true, otherwise return false
+
+virtual bool isInteractive() const = 0;
+// stars and explosions return false, ships, projectiles and goodies return true.
+
+bool isAlive() const;
+/* trivial, returns the m_isAlive data member. This function is not virtual because subclasses needn’t override it with a specialized implementation. */
+
+bool isOnScreen() const;
+/* convenience function for determining whether an actor is still on screen. Closely related to deciding whether an actor is dead or alive. Not virtual because Actor class has all the information needed to implement this function and subclasses need not modify it in any way. Also, this functionality could potentially benefit all of Actor’s derived classes. */
+    
+void markForDestruction(); 
+/* trivial, set m_isAlive to false. Signifying other parts of the program to destroy this (dynamically allocated) object. Not virtual because I do not expect to override this function. */
+
+StudentWorld* getWorld() const;
+/* trivial, return m_world. Not virtual because I do not expect to override this function. */
+
+bool isOnScreen(int x, int y) const; 
+/*convenience function which helps implement isOnScreen(). Not virtual because I do not expect to override this function. */
+
+
+class Ship 
+
+Ship(StudentWorld* world, int imageID, double startX, double startY, double size, int depth, int health);
+/* constructor, initializes ship objects with health in addition to those needed to initialize Actor. Not virtual because constructors cannot be. */
+
+virtual ~Ship() { }
+/* virtual destructor to enable polymorphism */
+
+void sufferDamage(int amount);
+/* implements the behavior when a ship is damaged by either another ship or a projectile. Not virtual because code unique to subclasses is factored into private helper functions. */ 
+    
+virtual bool isProjectile() const;
+virtual bool isShip() const;
+virtual bool isGoodie() const;
+virtual bool isInteractive() const;
+/* this set of functions establishes the identity of Ship objects, of which only isShip() and isInteractive return true. */
+
+int getHealth() const;
+
+/* trivial, returns the m_health member. Virtual keyword unnecessary because the implementation should be the same for all ships. */
+
+void setHealth(int value);
+/* trivial, accessor for the m_health member. Virtual keyword unnecessary because the implementation should be the same for all ships. */
+
+
+
+class NachenBlaster
+
+NachenBlaster(StudentWorld* world);
+/* constructs NachenBlaster object in the given world. */
+
+virtual ~NachenBlaster() {}
+/* virtual destructor to enable polymorphism */
+
+virtual void doSomething();
+/* implements NachenBlaster’s behavior based on user inputs. Is defined virtual because it is inherited. */
+    
+virtual void actOn(Actor * target);
+/* trivial function. Returns immediately. In my definition of an action, NachenBlaster is never the actor, but only the receiver. Is defined virtual because it is inherited. */
+
+virtual bool willActOn(Actor* target) const ;
+/* trivial function, returns false. NachenBlaster does not act on anything. Is defined virtual because it is inherited. */ 
+    
+virtual bool isFriendly() const;
+/* return true, distinguishes NachenBlaster from alien ships. Is defined virtual because it is inherited. */
+
+int getTorpedoCount() const;
+/* trivial function, accessor for the m_nTorpedoes member. Not virtual because I do not expect this function to be overrided. */
+
+void incTorpedoCount();
+/* increments m_nTorpedoes by 5. Not virtual because I do not expect this function to be overrided. */
+
+int getEnergy() const;
+/* trivial function, accessor for m_energyPoints. */
+
+
+
+class Alien
+
+Alien(StudentWorld* world, int imageID, double startX, double startY, int health, int planLength, double speed, int planDirection, int score, int damage);
+/* constructs Alien object with arguments for ship as well as those necessary to determine flight path, reward, and the effect of collision with NachenBlaster. */
+
+virtual ~Alien() {}
+/* virtual destructor enables polymorphism */
+
+virtual void doSomething();
+/* causes an alien ship to move based on pre-determined flight plan. Virtual because this function is inherited. */
+
+virtual bool willActOn(Actor* target) const;
+/* Alien ships will act on NachenBlaster via collision. Virtual because this function is inherited. */
+
+virtual void actOn(Actor * target);
+/* implements the behavior when an aliens ship collides with NachenBlaster and is destroyed in the process. Virtual because this function is inherited. */
+    
+virtual bool isFriendly() const;
+/* returns false, as dinstinguished from NachenBlaster. Virtual because this function is inherited. */
+
+int getReward() const;
+/* returns m_reward. The amount of points awarded to the player upon the destruction of this alien ship. Not virtual because implementation should not change for subclasses of Alien */
+
+void setFlightPlanLength(int length);
+/* mutator for m_flightPathLength. Not virtual because implementation should not change for subclasses of Alien */
+
+void setFlightSpeed(double speed);
+/* mutator for m_flightSpeed. Not virtual because implementation should not change for subclasses of Alien */
+
+void setFlightPlanDirection(int direction);
+/* mutator for m_flightPlanDirection. Not virtual because implementation should not change for subclasses of Alien */
+    
+virtual void attemptToDispenseGoodie() const = 0;
+/* determines the types of goodie an alien ship may leave behind upon destruction. Pure virtual because this behavior is subclass-specific. */
+
+
+
+class Smallgon 
+
+Smallgon(StudentWorld* world, double startX, double startY);
+/* construct Smallgon object with the world it is in as well as its location. */
+
+virtual ~Smallgon() {}
+/* virtual destructor enables polymorphism */
+
+virtual void attemptToDispenseGoodie() const;
+/* trivial function, returns immediately because Smallgon does not drop any goodie. Virtual because this function is inherited */
+
+
+
+class Smoregon 
+
+Smoregon(StudentWorld* world, double startX, double startY);
+/* construct Smoregon object with the world it is in as well as its location. */
+
+virtual ~Smoregon() { }
+/* virtual destructor enables polymorphism */
+
+virtual void attemptToDispenseGoodie() const;
+/* 1 in 6 probability to drop repair goodie and 1 in 6 probability to drop torpedo goodie. Virtual because this function is inherited */
+
+
+class Snagglegon 
+
+Snagglegon(StudentWorld* world, double startX, double startY);
+/* construct Snagglegon object with the world it is in as well as its location. */
+
+virtual ~Snagglegon() {}
+/* virtual destructor enables polymorphism */
+
+virtual void attemptToDispenseGoodie() const;
+/* 1 in 6 probability to drop extra life goodie. Virtual because this function is inherited. */
+
+
+
+class Projectile 
+
+Projectile(StudentWorld* world, int imageID, double startX, double startY, int direction, int damage);
+/* constructs Projectile object with arguments needed to initialize Actor as well as m_damage */
+
+virtual ~Projectile() { }
+/* virtual destructor enables polymorphism */
+
+virtual void doSomething();
+/* causes a projectile according to its programming. Virtual because this function is inherited. */
+
+virtual bool willActOn(Actor* target) const;
+/* return boolean. Projectiles will act on ships of the opposite side. Virtual because this function is inherited. */
+
+virtual void actOn(Actor* target);
+/* let a projectile cause damage to a ship and be used up in the process. */
+
+virtual bool isShip() const;
+virtual bool isProjectile() const;
+virtual bool isGoodie() const;
+virtual bool isInteractive() const;
+/* this set of functions establishes the identity of an actor as a projectile. isProjectile and isInteractive return true; the others false. Virtual because these functions are inherited. */ 
+
+
+
+class Cabbage 
+
+Cabbage(StudentWorld* world, int x, int y);
+/* constructs a cabbage object with the world in which it was launched as well as its starting x and y position. */
+
+virtual ~Cabbage() { }
+/* virtual destructor enables polymorphism */
+
+virtual bool isFriendly() const;
+/* return true, since all cabbages are fired by NachenBlaster. Virtual because this function is inherited. */
+
+
+class Turnip 
+Turnip(StudentWorld* world, double startX, double startY);
+/* constructs a Turnip object with the world in which it was launched as well as its starting x and y position. */
+
+virtual ~Turnip() {}
+/* virtual destructor enables polymorphism */
+
+virtual bool isFriendly() const;
+/* return false, since all turnips are fired by enemy aliens. Virtual because this function is inherited. */
+
+
+
+class Torpedo 
+
+Torpedo(StudentWorld* world, double startX, double startY, int direction);
+/* constructs a Torpedo object with the world in which it was launched as well as its starting x and y position and orientation. The last is also related to friendliness */
+
+virtual ~Torpedo() { }
+/* virtual destructor enables polymorphism */
+
+virtual bool isFriendly() const;
+/* return either true or false depending on the orientation of the torpedo. Virtual because this function is inherited. */
+
+
+
+class Goodie 
+
+Goodie(StudentWorld* world, int imageID, double startX, double startY);
+/* constructs a goodie in the given world, with an image ID, as well as starting x and y coordinates */
+
+virtual ~Goodie() { }
+/* virtual destructor enables polymorphism */
+
+virtual void doSomething();
+/* implements the falling behavior of all goodies. Virtual because this method is inherited. */
+
+virtual bool willActOn(Actor * target) const;
+/* return true when the target is NachenBlaster, false otherwise. */
+
+virtual void actOn(Actor* target);
+/* let NachenBlaster pick up this goodie. Update related data and stats. Virtual because this method is inherited */
+
+virtual bool isProjectile() const;
+virtual bool isShip() const;
+virtual bool isGoodie() const;
+virtual bool isFriendly() const;
+virtual bool isInteractive() const;
+/* this set of methods established the identity of Goodie objects. Of which, isGoodie and isInteractive returns true. The rest false. Those methods are declared virtual because they are inherited from Actor. */
+
+
+
+class ExtraLifeGoodie 
+
+ExtraLifeGoodie(StudentWorld* world, double startX, double startY);
+/* constructs an Extra life Goodie in the given world, at the set x and y coordinates. */
+
+virtual ~ExtraLifeGoodie() { }
+/* virtual destructor enables polymorphism */
+
+
+
+class RepairGoodie 
+
+RepairGoodie(StudentWorld* world, double startX, double startY);
+/* constructs a Repair Goodie in the given world, at the set x and y coordinates. */
+
+virtual ~RepairGoodie() { }
+/* virtual destructor enables polymorphism */
+
+
+
+class TorpedoGoodie 
+
+TorpedoGoodie(StudentWorld* world, double startX, double startY);
+/* constructs a Torpedo Goodie in the given world, at the set x and y coordinates. */
+
+virtual ~TorpedoGoodie() { }
+/* virtual destructor enables polymorphism */
+
+
+
+class NonInteractive 
+
+NonInteractive(StudentWorld* world, int imageID, double startX, double startY, double size, int depth);
+/* construct an object of class NonInteractive with arguments needed to initialize an Actor */
+
+virtual ~NonInteractive() { }
+/* virtual destructor enables polymorphism */
+
+virtual bool willActOn(Actor* target) const;
+/* trivial function. NonInteractive objects will not act on anything. So this function returns false immediately. */
+
+virtual void actOn(Actor* target);
+/* trivial. This function returns immediately. The reason is same as the above. */
+
+virtual bool isShip() const;
+virtual bool isProjectile() const;
+virtual bool isGoodie() const;
+virtual bool isFriendly() const;
+virtual bool isInteractive() const;
+/* this set of functions establishes the identity of a NonInteractive objects as derived from Actor. Everything returns false. Those functions are declared virtual because they are inherited from Actor. */
+
+
+
+class Star 
+
+Star(StudentWorld* world, double startX, double startY);
+/* constructs a Star in the given world, at the set x and y coordinates. */
+
+virtual ~Star() { }
+/* virtual destructor enables polymorphism */
+
+virtual void doSomething();
+/* implement the movement of stars in the background. This function is virtual because it is inherited. */
+
+
+class Explosion 
+Explosion(StudentWorld* world, double startX, double startY);
+/* constructs an Explosion in the given world, at the set x and y coordinates. */
+
+virtual ~Explosion() { }
+/* virtual destructor enables polymorphism */
+
+virtual void doSomething();
+/* implements the expansion and lifetime of an Explosion. This function is virtual because it is inherited. */
+
+
+
+
+Files: StudentWorld.cpp StudentWorld.h
+
+StudentWorld(std::string assetDir);
+/* constructs a studentWorld. Passing assetDir into the constructor for the base part. */
+
+~StudentWorld();
+/* destructor calls cleanup(). Not virtual because this class does not expect to be subclassed */
+
+virtual int init();
+/* start a new level. Set related constants to appropriate initial values. Put stars into the background. This function is declared virtual because it is inherited from the GameWorld class. */
+
+virtual int move();
+/* give all actors a chance to perform. And calculate the effects. This function is declared virtual because it is inherited from the GameWorld class. */
+
+virtual void cleanUp();
+/* delete all dynamically allocated objects. This function is declared virtual because it is inherited from the GameWorld class. */
+
+void addActor(Actor* actor);
+/* push a pointer to an actor to the front of the m_actors data member. Not virtual because this class does not expect to be subclassed. */
+
+void destroyedAlienShip();
+/* calling this function notifies the StudentWorld object that an alien ship has been destroyed so it can update some stats and data members accordingly. Not virtual because this class does not expect to be subclassed */
+
+void escapedShip();
+/* calling this function notifies the StudentWorld object that an alien ship has left the display area without being destroyed by NachenBlaster so it can update some stats and data members accordingly. Not virtual because this class does not expect to be subclassed */
+
+NachenBlaster* getNachenBlaster() const;
+/* accessor for the m_nachenBlaster data member. Not virtual because this class does not expect to be subclassed. */
+
+
+2. I think I correctly implemented all of the functionalities specified by the project requirements and tried my best to approximate the sample program where the requirements are ambiguous. 
+
+3. 
+
+After a close reading of the project specification. I believe the action performed by each Actor can be decomposed into two parts: 1) its own movement and 2) its collision with and effect on another actor. Furthermore, when two objects collide, their roles are asymmetric. Namely, one actor is bound to be destroyed in the interaction whereas the other might not be. For instance, when a projectile collides with a ship, the projectile is always consumed. When an alien ship collides with NachenBlaster, the alien ship is definitely destroyed. (NachenBlaster is supposed to deal 100 points of damage. So at very high levels, an alien may not be destroyed by a single collision. However, collision will happen repeatedly until the alien is totally destroyed. So the net effect is the same.)  So I defined the Actor which is definitely consumed by an interaction to be the actor and the other the target. This definition simplifies a collision from a bilateral relationship to a unilateral relationship. Namely, an action performed by projectiles on ships, goodies on NachenBlaster, or alien ships on NachenBlaster. I noticed that making this distinction also simplifies the design of my program. An actor only needs to specify how it moves (doSomething), whether it will act on another actor (willActOn), and how it will act (actOn), While the StudentWorld class can then centrally manage all movements and collisions. 
+
+I assumed that the order in which the movements and collisions of objects are considered is unimportant. Because a tick is such a small unit of time, whether an object is considered an instant earlier or later is immaterial.  So new objects are always pushed to the front of the list in StudentWorld, and two for loops traverses the list and consider objects pairwise. 
+
+Furthermore, since the spec did not mention how NachenBlaster should move if its next intended movement takes its center off the display area, I decided to set its coordinate to one below the view bound if it is to exceed the bound and 0 if it is to become negative. 
+
+4.
+
+StudentWorld:
+I tested this class by playing the game and noting whether the game logic has been correctly implemented. I.e whether the correct number of aliens show up for a specific level and if they are of the right variety. Whether explosions, stars, goodies etc. are correctly placed. I had some trouble testing the sound because it is not working properly on my Mac. However, I went back to the code and tracked down each place where the playSound function should be called. 
+
+Actor:
+
+This class is difficult to test directly because it is an Abstract Base Class so I cannot create an object out of it. However, I created numerous objects of its derived class, which all work correctly. So I am fairly confident that the implementation is correct.
+
+Projectile, Ship, Alien, NonInteractive, Goodie
+
+These, again, are abstract base classes. So I tested them though objects of their derived classes. 
+
+NachenBlaster:
+
+I tested this class by initializing a game with just NachenBlaster at first, so I was able to test whether keyboard inputs are directing it correctly. Then I tested it in the full game. By noting what happened when it collides with other actors. 
+
+Smallgon, Smoregon, Snnagglegon
+
+I tested those alien ship classes by playing the game. I calculated the number of cabbage hits it would require to take them out. And matched my calculations with what actually happens in the game. I also made sure that Smallgon and Smoregon changes direction once in a while. And Snnagglegon only flies diagonally. I also observed them when they fire. 
+
+Turnip, Cabbage, Torpedo
+
+I tested these classes by first observing whether they move properly when fired from a space ship, then whether they do the right damage when they collide with a space ship (if at all). I also took note of the rotation of Turnip and Cabbage as well as the orientation of Torpedo. 
+
+Repair Goodie, Extra Life Goodie, Torpedo Goodie:
+
+I tested these classes by observing whether they slowly fall as intended. And whether they are picked up by NachenBlaster and give the player the right reward.
+
+
+
+
+
+
+

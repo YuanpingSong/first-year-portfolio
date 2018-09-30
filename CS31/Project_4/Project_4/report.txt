@@ -1,0 +1,98 @@
+A. 
+Since iterating over an array requires the used of a loop, the implementations of those ten function all pose the same challenge: how to use indices to examine or to modify the desired element of the array. I arrived at the current design of my functions by using logic and through trial and error.
+
+B. Test Data: 
+
+Each test case is denoted by a comma separated list of arguments enclosed in curly braces {argument 1, … , argument n}.
+
+The following variables can be used as arguments:
+
+string empty[0] = {};
+string person[1] = { “max” };
+string clones[3] = { “rex”, “rex”, “rex” };
+string clonePeople[9] = { "tony", "bruce", "steve", "steve", "diana", "diana", "diana", "steve", "steve" }; 
+string people[5] = { "clark", "peter", "diana", "tony", "selina" };
+string hero[6] = { "clark", "peter", "reed", "tony", "diana", "bruce" };
+
+AppendToAll: 
+
+{ people, -5, “, Hello!”} // bad argument, return -1
+{ people, 5 , “, Hello!”} // good argument, all element modified, return 5
+{ people, 3 , “, Hello!”} // good argument, only first 3 elements modified, return 3
+{ empty, 0 “, Hello!”} // good argument, should not error out
+
+ 
+lookup:
+
+{ people, -5, “, Hello!”} // bad argument, return -1
+{ people, 5, “, Hello!”} // good argument, not found, return -1
+{ people, 5, “clark”} // good argument, return 0;
+{ people, 5, “Clark”} // good argument, target not found, return -1.
+{ people, 3 , “selina”} // good argument, only first 3 elements examined, return -1
+{ empty, 0 “, Hello!”} // good argument, should not error out. Because target is not found, return -1.
+
+positionOfMax:
+
+{ hero, -5 } // bad argument, return -1
+{ empty, 0 } // empty array, return -1
+{ hero, 6 } // good argument, return 3
+{ hero, 2 } // good argument, return 1 
+{ clones, 3} // good argument, return 0
+
+roateLeft: 
+
+{ people, -5, 2} // bad argument, return -1
+{ people, 5, 7} // bad argument, return -1
+{ people, 5, 5} // bad argument, return -1
+{ people, 5, 2} // good argument, return 2
+{ empty, 0, 0} // bad argument, since there is no element at position 0, return -1.
+
+countRuns:
+
+{ clonePeople, 9 } // good argument, return 5
+{ clonePeople, 9 } // bad argument, return -1
+{ clones, 3 } // good argument, return 1
+{ empty, 0 } // good argument, return 0, since there is no element to examine.
+
+flip:
+
+{ people, -5 } // bad argument, return -1
+{ people, 5 } // good argument, return 5
+{ people, 4} // good argument, return 4
+{ empty, 0} // good argument, return 0
+
+differ: 
+
+{ people, -5, hero, -6 } // bad argument, return -1
+{ people, 5, hero, 6 } // good argument, return 2
+{ people, 2, hero, 1 } // good argument, return 1
+{ people, 5, empty, 0 } // good argument, return 0
+
+subsequence: 
+
+{ people, -5, hero, -6} // bad argument, return -1
+{ people, 5, hero, 6} // good argument, however, hero cannot possibly be a subsequence of people, return -1
+{ hero, 6, people, 5} // good argument, however, hero does not contain people, return -1
+{ people, 5, hero, 2 } // good argument, return 0
+{ people, 5, empty, 0} // good argument, return 0
+
+lookupAny:
+
+{ people, -5, hero, -6} // bad argument, return -1
+{ people, 5, hero, 6} // good argument, return 0
+{ people, 5, empty, 0} // good argument, return -1
+{ empty, 0, people, 5} // good argument, return -1
+
+split: 
+
+{ hero, -6, “logan” } // bad argument, return -1
+{ hero, 6, “logan” } // good argument, return 3
+{ empty, 0, “logan” } // good argument, return 0
+
+
+
+
+
+
+
+

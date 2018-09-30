@@ -1,0 +1,112 @@
+Yuanping Song
+UID: 
+Lab 5
+
+2. check out version 3.0
+$ git checkout v3.0 -b quote
+
+3. Patch
+$ patch -p1 < quote-3.0-patch.txt
+
+Output is: 
+patching file src/cmp.c
+patching file src/diff.c
+patching file src/diff3.c
+patching file src/dir.c
+patching file src/sdiff.c
+patching file src/util.c
+
+4. The add log entry other window function (C-x 4 a) allows me to conveniently
+create change log entries.
+
+5. open any file affected by the path with emacs. i.e. 
+$ emacs src/cmp.c
+C-x 4 a
+... create ChangeLog
+
+6. commit using ChangeLog
+
+$ git commit -a -F ChangeLog
+
+The output is:
+ Committer: Yuanping Song <classbuj@lnxsrv09.seas.ucla.edu>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 6 files changed, 40 insertions(+), 40 deletions(-)
+
+7. git format-patch -1 --stdout > formatted-patch.txt
+
+8. My lab partner is Alex Zhao, and I received a patch from him
+$ git checkout v3.0 -b partner
+$ git am formatted-patch_alex.txt
+Applying: 2018-06-08 Alex Zhao <alexz@lnxsrv06.seas.ucla.edu>
+
+build: 
+$ ./bootstrap 
+$ wget http://web.cs.ucla.edu/classes/spring18/cs35L/assign/
+diffutils-gets.diff
+$ patch -p0 < diffutils-gets.diff
+$ ./configure
+$ make
+$ make check
+
+The last command gives an error: 
+/bin/sh: /bin/sh: cannot execute binary file
+however, /bin/sh is not something that we modified in this lab.
+furthermore, When I performed basic tests such as ./src/diff . -
+the output: ./src/diff: cannot compare '-' to a directory. So I 
+conclude that my partner's patch functions correctly. 
+
+9. 
+$ make distdir
+$ cd diffutils-3.0.1-e2b5
+$ emacs ChangeLog
+
+I see that the top entry in the change log is written by Alex: 
+
+2018-06-08  Alex Zhao  <alexz@lnxsrv06.seas.ucla.edu>
+
+        2018-06-08 Alex Zhao <alexz@lnxsrv06.seas.ucla.edu>
+                maint: quote 'like this' or "like this", not `like this'
+
+                This is in response to a recent change in the GNU coding standards,
+                which now suggest quoting 'like this' or "like this", instead of
+                `like this' or ``like this''.
+                * src/cmp.c (try_help, specify_ignore_initial, usage, main):
+                * src/diff.c (main, try_help, option_help_msgid, specify_value)
+                (compare_files):
+                * src/diff3.c (main, try_help, option_help_msgid, usage)
+                (read_diff):
+                * src/dir.c (compare_names):
+                * src/sdiff.c (try_help, usage, check_child_status, main):
+                * src/util.c (finish_output):
+                Quote 'like this' in output.
+
+10. 
+$ cd ~eggert/src/gnu/emacs
+$ gitk
+
+The latest merge not newer than 2015-01-25 is:
+Author: Eli Zaretskii <eliz@gnu.org>  2015-01-24 02:09:02
+Committer: Eli Zaretskii <eliz@gnu.org>  2015-01-24 02:09:02
+Parent: b4f40757efcb67ed73ca60c257e27dab493ee332 (Fixes: debbugs:19660)
+Child:  3b23e6a70294a3fee23353bfb8a23c7167d7c4ef (Fix the description of --insert command-line option  (Bug#19694))
+Branches: master, remotes/origin/master and many more (79)
+Follows: emacs-24.4
+Precedes: emacs-24.4.90
+
+    Add a cross-reference in ELisp manual.  (Bug#19668)
+    
+     doc/lispref/searching.texi (Regexp Search): Add a cross-reference to "Syntax
+     of Regexps".
+

@@ -1,0 +1,214 @@
+# download coreutils tarball
+wget http://web.cs.ucla.edu/classes/spring18/cs35L/assign/coreutils-with-bug.tar.gz
+
+# Untar file
+tar -xzf coreutils-with-bug.tar.gz
+
+# Create Directory In Which to install buggy version of ls
+cd ~/Desktop/cs35l/lab4
+mkdir buggy_playground
+
+# in coreutils-with-bug, configure makefile
+./configure --prefix=/u/eng/class/classbuj/Desktop/cs35l/lab4/buggy_playground/
+
+make install
+# encounters a problem because another function named futimens 
+# already exists in /usr/include/sys/stat.h Since C does not 
+# support funcitonal overloading, we must change the function 
+# in utimecmp to another name. 
+
+# Obtain Patch
+wget http://web.cs.ucla.edu/classes/spring18/cs35L/assign/coreutils.diff
+
+# Apply patch 
+patch -p0 < coreutils.diff
+
+# The renaming patch fixes the problem because it changes the name of 
+# our futimens function to coreutils_futimens
+
+make install
+# install coreutils into buggy_playground
+
+tmp=$(mktemp -d)
+cd $tmp
+touch -d '1918-11-11 11:00 GMT' wwi-armistice
+touch now
+sleep 1
+touch now1
+# set up test 
+
+# in $temp:
+TZ=UTC0 ~/Desktop/cs35l/lab4/buggy_playground/bin/ls -lt 
+--full-time wwi-armistice now now1
+# reproduce problem
+
+# There is a bug in the ls program because it incorrectly orders a date
+# far in the past before dates at present. 
+# Because we are dealing with an error caused by the incorrect ordering of 
+# files based on their last modify time, inspecting the following lines of code 
+# suggests that it might be worth looking for our bug in the compare_mtime 
+# function:
+
+line 3004:
+case sort_time:
+	  switch (time_type)
+	    {
+	    case time_ctime:
+	      func = sort_reverse ? rev_str_ctime : compstr_ctime;
+	      break;
+	    case time_mtime:
+	      func = sort_reverse ? rev_str_mtime : compstr_mtime;
+	      break;
+...
+
+# go to compare_mtime function, I find that it in turn delegates
+# to cmp_mtime, which is located 8 lines above:
+
+Line 2884:
+static int compare_mtime (V a, V b) { return cmp_mtime (a, b, xstrcoll); }
+
+# I see that most of the work in cmp_mtime is performed by timespec_cmp,
+# which is not defined in the ls.c file. So it is convenient to use gdb
+# to show exactly what it does
+
+Line 2876:
+static inline int
+cmp_mtime (struct fileinfo const *a, struct fileinfo const *b,
+	   int (*cmp) (char const *, char const *))
+{
+  int diff = timespec_cmp (get_stat_mtime (&b->stat),
+			   get_stat_mtime (&a->stat));
+  return diff ? diff : cmp (a->name, b->name);
+}
+
+# start Debugging with gdb:
+gdb ~/Desktop/cs35l/lab4/buggy_playground/bin/ls
+
+# In gdb console, set break point at cmp_mtime
+break cmp_mtime
+
+# start running with arguments
+(gdb) break cmp_mtime
+Breakpoint 4 at 0x404990: cmp_mtime. (4 locations)
+(gdb) run -lt --full-time wwi-armistice now now1
+Starting program: /w/home.09/class/classbuj/Desktop/cs35l/lab4/buggy_playground/bin/ls -lt --full-time wwi-armistice now now1
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib64/libthread_db.so.1".
+
+Breakpoint 4, compare_mtime (a=0x617190, b=0x617240) at ls.c:2884
+2884	static int compare_mtime (V a, V b) { return cmp_mtime (a, b, xstrcoll); }
+(gdb) list
+2879	{
+2880	  int diff = timespec_cmp (get_stat_mtime (&b->stat),
+2881				   get_stat_mtime (&a->stat));
+2882	  return diff ? diff : cmp (a->name, b->name);
+2883	}
+2884	static int compare_mtime (V a, V b) { return cmp_mtime (a, b, xstrcoll); }
+2885	static int compstr_mtime (V a, V b) { return cmp_mtime (a, b, strcmp); }
+2886	static int rev_cmp_mtime (V a, V b) { return compare_mtime (b, a); }
+2887	static int rev_str_mtime (V a, V b) { return compstr_mtime (b, a); }
+2888	
+(gdb) step
+cmp_mtime (cmp=0x402960 <xstrcoll>, b=0x617240, a=0x617190) at ls.c:2884
+2884	static int compare_mtime (V a, V b) { return cmp_mtime (a, b, xstrcoll); }
+(gdb) step
+timespec_cmp (b=..., a=...) at ../lib/timespec.h:48
+48	  int diff = a.tv_sec - b.tv_sec;
+(gdb) step
+49	  return diff ? diff : a.tv_nsec - b.tv_nsec;
+(gdb) print /d diff
+$12 = 1525636078
+
+# Now we see where our problem lies. Presumably, the structs a and b encodes the
+# timestamp information of wwi-armistice and now1. The former directory was 
+# created far in the past so a.tv_sec should be a large negative value. 
+# now1 is created after the linux epoch so b.tv_sec is positive and the result 
+# of the overall subraction should be negative. However, intead diff is a large 
+# positive value, which signifies two's complement arithmetic underflow. 
+# The way to fix this problem is to perform the comparison without using arithmetic
+# that might lead to overflow or underflow. The comparison operators naturally 
+# come into mind. 
+
+# fix timespec_cmp in timespec.h
+cd ~/Desktop/cs35l/lab4/coreutils-with-bug/lib/
+emacs timespec.h
+
+# produce fixed version of timesepc.h where timespec_cmp's function definition is
+# changed to the following: 
+static inline int
+timespec_cmp (struct timespec a, struct timespec b)
+{
+    if (a.tv_sec < b.tv_sec) {
+        return -1;
+    } else if (a.tv_sec > b.tv_sec) {
+        return 1;
+    } else if (a.tv_nsec < b.tv_nsec) {
+        return -1;
+    } else if (a.tv_nsec > b.tv_nsec) {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
+
+# generate patch
+diff -u coreutils-with-bug/lib/timespec.h timespec.h > bugfix.diff
+
+# change path name in patch to relative 
+coreutils-with-bug/lib/timespec.h -> lib/timespec.h
+timespec.h -> lib/timespec.h
+
+# create change log
+emacs 
+M-x 4 a
+
+# ChangeLog contains the following text:
+2018-05-06  Yuanping Song  <classbuj@lnxsrv04.seas.ucla.edu>
+        * timespec.h (timespec_cmp): fixed underflow bug to support comparison
+                h in dates the remote. 
+
+# Add change log to patch 
+cat ChangeLog bugfix.diff >> lab4.diff
+
+# use patch to fix bug: 
+patch -p0 < lab4.diff
+make install
+
+# test the fix, run a script setup.sh:
+#!/bin/bash
+
+tmp=$(mktemp -d)
+echo $tmp
+cd $tmp
+touch -d '1918-11-11 11:00 GMT' wwi-armistice
+touch now
+sleep 1
+touch now1
+
+TZ=UTC0 ~/Desktop/cs35l/lab4/buggy_playground/bin/ls -lt --full-time wwi-armistice now now1
+cd ~/Desktop/cs35l/lab4/
+
+# the output is 
+-rw-r--r-- 1 classbuj class 0 2018-05-06 21:22:02.056561920 +0000 now1
+-rw-r--r-- 1 classbuj class 0 2018-05-06 21:22:01.052525977 +0000 now
+-rw-r--r-- 1 classbuj class 0 1918-11-11 11:00:00.000000000 +0000 wwi-armistice
+
+# We see that the dates are now ordered correctly, our bug has been fixed. 
+
+# I next investigate the effect of file system on the behavior of ls -t
+[classbuj@lnxsrv04 ~]$ touch -d '1918-11-11 11:00 GMT' wwi-armistice
+[classbuj@lnxsrv04 ~]$ touch now
+[classbuj@lnxsrv04 ~]$ touch now1
+[classbuj@lnxsrv04 ~]$ TZ=UTC0 ls -lt --full-time wwi-armistice now now1
+-rw-r--r-- 1 classbuj class 0 2054-12-17 17:28:16.000000000 +0000 wwi-armistice
+-rw-r--r-- 1 classbuj class 0 2018-05-06 21:27:20.038426000 +0000 now1
+-rw-r--r-- 1 classbuj class 0 2018-05-06 21:27:14.806836000 +0000 now
+
+# knowing that linux uses two signed 32 bit integers to represent timestamps whereas
+# seasnet machines's file system holds only one unsigned 32 bit integer, I conclude 
+# that the combined effect of truncation and signed to unsigned conversion causes 
+# a date in the past to be incorrectly interepreted as a date in the future. 
+
+
+

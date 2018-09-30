@@ -1,0 +1,128 @@
+1. 
+man -k <entry>
+searchs for commands which contains <entry> in the description section of their man pages while 
+man -K <entry> 
+searches for commands which contains <entry> anywhere in their man pages. 
+
+Those commands were discovered in the Optoins section, Main modes of operation subsection, of the man commands's man page.
+
+2.
+man which
+was used to look up the usage of the which command
+
+which cp
+which sh
+Gives  
+/usr/local/cs/bin/cp
+And
+/usr/bin/sh
+Respectively
+
+
+3. 
+cd /usr/bin
+to change the current directory to /usr/bin where the executables are stored
+find -name "?"
+using a regular expression to match all files with one character names. 
+The outputs are X: the X window system, w: the w utility, and [: the condition evaluation utility.
+The execuatlbes' repective man pages were also consulted using the man command.
+
+4. 
+man link 
+gives an overview of commands associated with symbolic links and suggests readlink as a possible solution. 
+man readlink 
+suggests that readlink can indeed be used
+readlink /usr/bin/emacs
+prints out the directory of the file executed which is /etc/alternatives/emacs
+
+5. 
+/usr/bin/emacs has version 24.3.1
+the plain emacs has version 25.3.1
+The difference is due to a more updated version of emacs being installed in the /usr/local/cs/bin path.
+
+the commands used are 
+/usr/bin/emacs
+emacs
+to run the two programs.
+
+6.
+set the sticky bit for group and revoke the execution permission of others
+
+7.
+.
+./bin
+./automake-1.16.1
+./help2man-1.47.6
+./emacs-25.3
+man find 
+was used to look up the usage of find
+I drew inspiration from the listed examples
+the above result was produced using 
+cd /usr/local/cs
+find . -maxdepth 1 - newerct '30 day ago' -print 
+ 
+8.
+294
+the command used is: 
+find . -maxdepth 1 -type l | wc -l
+
+man wc
+and 
+man find
+were used to look up the usage of those repective commands.
+| was used to eliminate the need to write to a temporary file.
+
+9.
+man ls was used to look up the usage of ls
+ls -t
+Indicates that librom1394.so.0.3.0 is the oldest file sorted by date modified. 
+
+10.
+man locale
+says the information is stored in /usr/lib/locale/locale-archive
+
+11.
+
+commands used are:
+C-h ? a d o w n c a s e RET
+
+results are:
+downcase-dwim
+downcase-region
+downcase-word  
+
+
+12.
+
+commands used are:
+C-h ? k <Key Sequence>
+
+C-M-r does an incremental search backward for regular expression.
+C-M-v Scroll next window upward ARG lines; or near full screen if no ARG, where ARG is an argument.
+
+13.
+C-g exits the execution of lisp code.
+commands used are:
+C-h k C-g RET 
+
+14.
+
+yank reinsert the last stretch of killed text.
+it can be invoked using C-y
+
+commands used are 
+C-h a y a n k RET
+
+15. 
+
+The ls -l command lists current director . and parent directory .. whereas dired mode in emacs does not. 
+
+the commands used are 
+cd /usr/bin
+ls -l
+in shell
+and 
+C-h F dired
+C-x d 
+/ u s r / b i n
+in emacs

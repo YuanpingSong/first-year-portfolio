@@ -1,0 +1,60 @@
+Lab Notebook
+
+step 1: 
+# obtain Coreutils 8.29 source code 
+wget ftp://ftp.gnu.org/gnu/coreutils/coreutils-8.29.tar.xz
+# download signature 
+wget ftp://ftp.gnu.org/gnu/coreutils/coreutils-8.29.tar.xz.sig
+# download gnu keyring 
+wget https://ftp.gnu.org/gnu/gnu-keyring.gp
+# verify signature of tarball
+gpg --verify --keyring ./gnu-keyring.gpg coreutils- 8.29.tar.xz.sig
+
+gpg warned that the key is not certified with a trusted signature and there is no indication that the signature belongs to the owner. This problem occured because 
+the I did not trust the pubilc key.
+
+
+step 2: 
+# extract files
+tar -xf coreutils-8.29.tar.xz
+# run configure script
+./configure --prefix=/u/eng/class/classbuj/coreutilsInstall
+# compile
+make 
+# install 
+make install
+
+step 3: reproduce bug
+# go to directory where my version of coreutils is installed 
+cd ~/coreutilsinstall/bin
+# create playground directory
+mkdir foo
+# reproduce bug
+./ls -a -A foo
+the output is . .., instead of a blank line
+
+step 4: apply patch
+# download patch and copy the content of patch into a file named ls.patch
+# apply patch
+patch -p1 < ls.patch
+
+step 5: rebuild coreutils
+# Create makefile
+./configure
+# generate automake file
+autoreconf -f -i
+# re-compile
+make 
+
+Step 6 Testing
+inside ~/Desktop/cs35l/lab3/coreutils-8.29/src
+mkdir foo # create playground for testing
+./ls -aA foo # invoke the patched ls command on foo, the output is nothing, 
+             # as expected
+ls -aA foo # the unfixed version still gives . .. 
+
+
+
+
+
+

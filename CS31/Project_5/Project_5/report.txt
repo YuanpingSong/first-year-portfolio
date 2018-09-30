@@ -1,0 +1,42 @@
+A.
+In writing this program, several notable obstacles which I overcame include file input, program logic, c-string manipulation, and user interaction. I resolved each difficulty through a combination of reasoning as well as trial-and-error.
+
+B. 
+The design of my program is as follows:
+
+runOneRound: 
+
+check for bad arguments
+find secret word
+repeatedly:
+	prompt reader for probe word
+	if probe word is legal
+		proceed
+	else 
+		inform the user
+		continue
+	if probe word equals secret word
+		break
+	determine the number of stars and planets
+	output the number of stars and planets
+return the number of rounds
+
+Main: 
+
+load words into array and store the number of words
+if no word is loaded 
+	inform the user
+	terminate
+if the words can fit in the array
+	prompt reader for the number of rounds
+	check if number is positive
+	repeatedly:
+		output round number
+		randomly select secret word
+		output length of secret word
+		play one round and record score
+		inform the reader how many tires he/she took
+		output stats
+else
+	inform the user of an error
+	

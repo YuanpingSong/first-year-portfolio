@@ -1,0 +1,34 @@
+NAME: Yuanping Song
+EMAIL: yuanping.song@outlook.com
+ID: 
+SLIPDAYS: 0
+
+The files that are included in my submission are as follows:
+lab0.c: the source file of my program, including the main funciton, the purpose of which is
+to redirect input and output streams and test some gdb functionalities.
+Makefile: script automating the building of the lab0 executable and the packaging of project files
+backtrace.png: a photo demonstrating the stack trace of my pogram when a segfault occures in gdb.
+breakpoint.png: a photo demonstrating the use of breakpoints in gdb by breaking at one step before
+the segfault.
+README: this file. Contains a description of the files included in the tarball as well as some
+general informaiton relating to my submission.
+
+Test Case Description
+
+My smoke testcases are by no means comprehensive. But they focus on two important aspects of my
+progarm to make sure it is not broken due to some careless error. First, I ran test cases against
+the command line interface of lab0 to check if it is able to handle flags such as --input, --output,
+and --catch, both individually as well as in combination. I chose not to test the --segfault flag
+because it is difficult to determine in a few lines of shell script whether segfault or some other
+error has occured. Next, I used /dev/urandom to generate a thousand bytes of random number and pipe
+the data into a temporoary input file. then I redirect the input to an tempoary output file and
+check wether the data is intact. When both testcases generate no failure, I know that the structure
+of my program is correct. So this simple script meets the need of a smoke test.
+
+Miscelaneous
+
+When implementing my solution, I consulted the man pages on http://man7.org extensively.
+
+In my implementation, for generating error messages, I relied mostly on perror instead of strerror
+because the former packages a print statement as well as strerror in one, and is theremore more
+convenient to use. 

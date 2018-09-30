@@ -1,0 +1,12 @@
+NAME: Yuanping Song
+EMAIL: yuanping.song@outlook.com
+ID: 
+SLIPDAYS: 0
+
+Description of files
+
+lab3b.py: The python program which is my solution to the assignment. This script performs certain integrity audits on a CSV file which represents data on a (possibly corrupted) hard disk. My program is capable of detecting various inconsistencies and report it to the user. 
+
+Makefile: Script for use with the make utility to automate standard build targets: default, clean, and dist. Since python programs are interprepted, the default targets does not produce an executable. Instead, it creates a soft link named lab3b to my script, per assignment specification.
+
+README: This file provides a description of my other project files. 

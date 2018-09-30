@@ -1,0 +1,107 @@
+Lab log: 
+
+cd Desktop/cs35l // go to course folder
+mkdir lab2 // create new directory for lab
+sort /usr/share/dict/words >> words // sort file and put content into local doc
+wget http://web.cs.ucla.edu/classes/spring18/cs35L/assign/assign2.html // get site
+
+cat assign2.html | tr -c 'A-Za-z' '[\n*]' | less
+All the letter are preserved while everything else is mapped to newlines.
+
+cat assign2.html | tr -cs 'A-Za-z' '[\n*]' | less
+Multiple non-alphabetic characters generate only one newline. So we generally see words from the webpage along with html elements striped of their brackets on their own lines.
+
+cat assign2.html | tr -cs 'A-Za-z' '[\n*]' | sort | less
+The list of words is sorted by alphabetical order
+
+cat assign2.html | tr -cs 'A-Za-z' '[\n*]' | sort -u | less
+The list now only contains unique words
+
+cat assign2.html | tr -cs 'A-Za-z' '[\n*]' | sort -u | comm - words | less
+A three column file is displayed. With words unique to the webpage appearing in the first column (there is basically none), words unique to the 'words' file appearing in the second column and words common to both appearing in the third. 
+
+cat assign2.html | tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - words | less
+The second and third column from the previous file were repressed. So only words unique to the webpage were displayed. Those were made up of words starting a sentence or Hawaiian words. 
+
+wget http://mauimapp.com/moolelo/hwnwdseng.htm
+download webpage for creating Hawaiian dictionary
+
+touch buildwords
+Create the script
+
+Chmod 755 buildwords
+Enable execute permission for this script
+
+My Shell Script: 
+
+#!/bin/bash
+
+cat $1 |
+# Receive input file from argument
+
+tr -d '[:blank:]' |
+# delete whitespaces
+
+tr '\r' ' ' |
+# delete carriage returns and replace with space
+
+tr '\n' ' ' |
+# delte newlines and replace with space
+
+sed s/"<tr> <td>"/"\n"/g |
+# put the english word on new lines
+
+grep ^[A-Z] |
+# keep only the lines starting with an English word
+
+grep -Po '<td>\K[^"]*'| 
+# delete everything upto and including the opening <td> tag on every line
+
+sed "s_</td>.*__"| 
+# delete everything after the hawaiian word
+
+tr ',' '\n'|
+# treat comma separated entires as two enties
+
+tr 'A-Z' 'a-z' |
+# treat upper case like lower case
+
+sed 's/<u>//' |
+sed 's_</u>__'|
+# remove underlines
+
+tr '`' "'" |
+# translate accents
+
+grep -v "[^pk'mnwlhaeiou]" |
+# reject words containning non-hawaiian letters
+
+sort -u
+# sort and keep unique words
+
+Bug: because the script first deletes all whitespace characters
+To help with processing. It does not handle correctly Hawaiian 
+Words containing spaces. Kupuna kane, for example, is treated like
+One word instead of two. 
+
+
+cat assign2.html | tr -cs 'A-Za-z' '[\n*]' | sort -u | comm -23 - hwords | wc -l
+outputs 452, meaning there are 452 unique words appearing on this website not-contained within the hawaiian dictionary
+
+cat assign2.html | tr -cs 'A-Za-z' '[\n*]' | tr 'A-Z' 'a-z' | sort -u | comm -23 - words > misE
+Prepares a list of 'misspelled' English words from this website
+
+cat assign2.html | tr -cs 'A-Za-z' '[\n*]' | tr 'A-Z' 'a-z' | sort -u | comm -23 - hwords > misH
+Prepares a list of words that are misspelled from the Hawaiian perspective
+
+There are words misspelled as English but not Hawaiian, wiki is an example.
+
+There are words misspelled as Hawaiian but not English, able is an example. 
+
+Those results were obtained using diff misE misH | less
+Where < denotes the former scenario and > the later scenario. 
+
+
+
+
+

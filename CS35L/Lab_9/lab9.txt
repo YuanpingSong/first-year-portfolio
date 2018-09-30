@@ -1,0 +1,459 @@
+Yuanping Song
+UID: 
+Lab 5
+
+1. Get a copy of Diffutil using url specified in the assignmen
+$ cp -r ~eggert/src/gnu/diffutils .
+
+2. Get log of changeds
+$ cd diffutils
+$ git log > git-log.txt
+
+3. Generate list of tags
+$ git tag > git-tags.txt
+
+4. Generate patch
+In emacs: C-s maint: quote locates the desired commit
+I see that the hash of this commit is 
+62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f
+
+Generate the patch:
+$ git format-patch -1 62ca21c8c1a5aa3488589dcb191a4ef04ae9ed4f --stdout > quote-patch.txt
+
+5. Check out version 3.0 of Diffutils
+$ git checkout v3.0 -b my_branch
+
+6. Apply the patch 
+$ patch -p1 < quote-patch.txt
+The problems encoutered are: 
+Cannot find: HACKING, diffutils.texi, man/help2man
+Failure to write to: README, README-hacking, cfg.mk, diff.c, diff3.c
+
+7. Use git status
+$ git status
+the output is as follows:
+On branch my_branch
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   NEWS
+	modified:   README
+	modified:   TODO
+	modified:   doc/diagmeet.note
+	modified:   ms/config.bat
+	modified:   ms/config.site
+	modified:   po/en.po
+	modified:   src/analyze.c
+	modified:   src/cmp.c
+	modified:   src/context.c
+	modified:   src/diff.c
+	modified:   src/diff.h
+	modified:   src/diff3.c
+	modified:   src/dir.c
+	modified:   src/ifdef.c
+	modified:   src/io.c
+	modified:   src/sdiff.c
+	modified:   src/side.c
+	modified:   src/system.h
+	modified:   src/util.c
+	modified:   tests/help-version
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+	NEWS.orig
+	README-hacking.orig
+	README-hacking.rej
+	README.orig
+	README.rej
+	cfg.mk.orig
+	cfg.mk.rej
+	git-log.txt
+	git-tags.txt
+	ms/config.site.orig
+	quote-patch.txt
+	src/cmp.c.orig
+	src/context.c.orig
+	src/diff.c.orig
+	src/diff.c.rej
+	src/diff.h.orig
+	src/diff3.c.orig
+	src/diff3.c.rej
+	src/dir.c.orig
+	src/sdiff.c.orig
+	src/system.h.orig
+	src/util.c.orig
+	tests/help-version.orig
+
+8. Learn more Emacs
+open a file and press C-x v = activates the diff mode. 
+in that mode, the combination C-x v u reverts all the 
+changes made to a document. Furthermore, C-u C-c C-a 
+reverts a hunk, C-c C-a applies a hunk, and C-c C-c 
+goes to the source line represented by the hunk. 
+C-x o to toggle window
+
+9. 
+Use C-x v = and C-x v u to compeltely revert NEWS, README, TODO, 
+doc/diagmeet.note, ms/config.bat, ms/config.site, po/en.po, src/diff.h,
+src/system.h, tests/help-version
+
+Use C-x v =, C-u C-c C-a to edit .c files at a finer grain.
+
+10. open both diff3.c, diff3.c.rej and diff.c, diff.c.rej to manually patch those files.
+
+11. The untracked files are:
+
+	NEWS.orig
+	README-hacking.orig
+	README-hacking.rej
+	README.orig
+	README.rej
+	cfg.mk.orig
+	cfg.mk.rej
+	git-log.txt
+	git-tags.txt
+	ms/config.site.orig
+	quote-patch.txt
+	src/cmp.c.orig
+	src/context.c.orig
+	src/diff.c.orig
+	src/diff.c.rej
+	src/diff.h.orig
+	src/diff3.c.orig
+	src/diff3.c.rej
+	src/dir.c.orig
+	src/sdiff.c.orig
+	src/system.h.orig
+	src/util.c.orig
+	tests/help-version.orig
+
+$ git clean -f
+
+removes all of them plus a few others made during the editing process: 
+Removing NEWS.orig
+Removing README-hacking.orig
+Removing README-hacking.rej
+Removing README.orig
+Removing README.rej
+Removing cfg.mk.orig
+Removing cfg.mk.rej
+Removing git-log.txt
+Removing git-tags.txt
+Removing ms/config.site.orig
+Removing quote-patch.txt
+Removing src/*vc-diff*
+Removing src/cmp.c.orig
+Removing src/context.c.orig
+Removing src/diff.c.orig
+Removing src/diff.c.rej
+Removing src/diff.h.orig
+Removing src/diff3.c.orig
+Removing src/diff3.c.rej
+Removing src/dir.c.orig
+Removing src/sdiff.c.orig
+Removing src/system.h.orig
+Removing src/util.c.orig
+Removing tests/#help-version#
+Removing tests/help-version.orig
+
+12. git status gives
+
+$ git status
+
+On branch my_branch
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git checkout -- <file>..." to discard changes in working directory)
+
+	modified:   src/cmp.c
+	modified:   src/diff.c
+	modified:   src/diff3.c
+	modified:   src/dir.c
+	modified:   src/sdiff.c
+	modified:   src/util.c
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+Output patch:
+git diff > quote-3.0-patch.txt
+
+13. Build Diffutils
+
+as per readme-hacking:
+$ ./bootstrap
+
+because I am running on lnxsrv09
+$
+$ patch -p0 < diffutils-gets.diff
+$ ./configure
+$ make
+$ make check
+
+$ diff . - 
+diff: cannot compare '-' to a directory
+
+$  diff --help
+
+I verify that in the help output the correct type of quote is displayed. 
+
+14. Check
+
+# obtain patched source code
+cp -r src diffutils-3.0-patch
+
+Obtain unpatched source
+$ mkdir playground
+$ cd playground
+$ cp -r ~eggert/src/gnu/diffutils .
+$ cd diffutils
+$ git checkout v3.0 -b newBranch
+$ cp -r src diffutils-3.0
+$ mv diffutils-3.0 ~/Desktop/cs35l/lab9/lab/diffutils/
+
+In lab/diffutils, compare:
+diff -pru diffutils-3.0 diffutils-3.0-patch >quote-3.0-test.txt
+
+
+15. compare quote-3.0-test.txt and quote-3.0-patch.txt
+
+$ diff quote-3.0-test.txt quote-3.0-patch.txt
+
+shows that the files are not identical. However the differences
+are innocuous, because they mostly result from differences in 
+relative pathnamnes. 
+
+The entire output is as follows: 
+
+1,6c1,5
+< Only in diffutils-3.0-patch: analyze.o
+< Only in diffutils-3.0-patch: cmp
+< diff -pru diffutils-3.0/cmp.c diffutils-3.0-patch/cmp.c
+< --- diffutils-3.0/cmp.c	2018-06-08 13:41:31.691842000 -0700
+< +++ diffutils-3.0-patch/cmp.c	2018-06-08 13:39:04.379399000 -0700
+< @@ -115,7 +115,7 @@ try_help (char const *reason_msgid, char
+---
+> diff --git a/src/cmp.c b/src/cmp.c
+> index 2455dc4..e19f013 100644
+> --- a/src/cmp.c
+> +++ b/src/cmp.c
+> @@ -115,7 +115,7 @@ try_help (char const *reason_msgid, char const *operand)
+15c14
+< @@ -134,7 +134,7 @@ specify_ignore_initial (int f, char **ar
+---
+> @@ -134,7 +134,7 @@ specify_ignore_initial (int f, char **argptr, char delimiter)
+60,128c59,62
+< Only in diffutils-3.0-patch: cmp.o
+< Only in diffutils-3.0-patch: context.o
+< Only in diffutils-3.0-patch: .deps
+< Only in diffutils-3.0-patch: diff
+< Only in diffutils-3.0-patch: diff3
+< diff -pru diffutils-3.0/diff3.c diffutils-3.0-patch/diff3.c
+< --- diffutils-3.0/diff3.c	2018-06-08 13:41:31.736797000 -0700
+< +++ diffutils-3.0-patch/diff3.c	2018-06-08 13:39:04.387398000 -0700
+< @@ -316,9 +316,9 @@ main (int argc, char **argv)
+<    if (argc - optind != 3)
+<      {
+<        if (argc - optind < 3)
+< -	try_help ("missing operand after `%s'", argv[argc - 1]);
+< +	try_help ("missing operand after '%s'", argv[argc - 1]);
+<        else
+< -	try_help ("extra operand `%s'", argv[optind + 3]);
+< +	try_help ("extra operand '%s'", argv[optind + 3]);
+<      }
+<  
+<    file = &argv[optind];
+< @@ -351,7 +351,7 @@ main (int argc, char **argv)
+<  	 file instead.  */
+<        common = 3 - common;
+<        if (STREQ (file[0], "-") || STREQ (file[common], "-"))
+< -	fatal ("`-' specified for more than one input file");
+< +	fatal ("'-' specified for more than one input file");
+<      }
+<  
+<    mapping[0] = 0;
+< @@ -412,7 +412,7 @@ try_help (char const *reason_msgid, char
+<    if (reason_msgid)
+<      error (0, 0, _(reason_msgid), operand);
+<    error (EXIT_TROUBLE, 0,
+< -	 _("Try `%s --help' for more information."), program_name);
+< +	 _("Try '%s --help' for more information."), program_name);
+<    abort ();
+<  }
+<  
+< @@ -435,7 +435,7 @@ static char const * const option_help_ms
+<    "",
+<    N_("-m  --merge  Output merged file instead of ed script (default -A)."),
+<    N_("-L LABEL  --label=LABEL  Use LABEL instead of file name."),
+< -  N_("-i  Append `w' and `q' commands to ed scripts."),
+< +  N_("-i                          append 'w' and 'q' commands to ed scripts"),
+<    N_("-a  --text  Treat all files as text."),
+<    N_("--strip-trailing-cr  Strip trailing carriage return on input."),
+<    N_("-T  --initial-tab  Make tabs line up by prepending a tab."),
+< @@ -460,7 +460,7 @@ usage (void)
+<      else
+<        putchar ('\n');
+<    printf ("\n%s\n%s\n",
+< -	  _("If a FILE is `-', read standard input."),
+< +	  _("If a FILE is '-', read standard input."),
+<  	  _("Exit status is 0 if successful, 1 if conflicts, 2 if trouble."));
+<    emit_bug_reporting_address ();
+<  }
+< @@ -1475,7 +1475,7 @@ undotlines (FILE *outputfile, bool leadi
+<     around the problems involved with changing line numbers in an ed
+<     script.
+<  
+< -   As in `output_diff3', the variable MAPPING maps from file number
+< +o   As in 'output_diff3', the variable MAPPING maps from file number
+<     according to the argument list to file number according to the diff
+<     passed.  All files listed below are in terms of the argument list.
+<     REV_MAPPING is the inverse of MAPPING.
+< Only in diffutils-3.0-patch: diff3.o
+< diff -pru diffutils-3.0/diff.c diffutils-3.0-patch/diff.c
+< --- diffutils-3.0/diff.c	2018-06-08 13:41:31.707827000 -0700
+< +++ diffutils-3.0-patch/diff.c	2018-06-08 13:39:04.382398000 -0700
+---
+> diff --git a/src/diff.c b/src/diff.c
+> index cc1b611..c4cfba7 100644
+> --- a/src/diff.c
+> +++ b/src/diff.c
+177c111
+< @@ -826,7 +826,7 @@ try_help (char const *reason_msgid, char
+---
+> @@ -826,7 +826,7 @@ try_help (char const *reason_msgid, char const *operand)
+186c120
+< @@ -870,11 +870,11 @@ static char const * const option_help_ms
+---
+> @@ -870,11 +870,11 @@ static char const * const option_help_msgid[] = {
+200c134
+< @@ -895,7 +895,7 @@ static char const * const option_help_ms
+---
+> @@ -895,7 +895,7 @@ static char const * const option_help_msgid[] = {
+209c143
+< @@ -918,9 +918,9 @@ static char const * const option_help_ms
+---
+> @@ -918,9 +918,9 @@ static char const * const option_help_msgid[] = {
+221c155
+< @@ -960,7 +960,7 @@ specify_value (char const **var, char co
+---
+> @@ -960,7 +960,7 @@ specify_value (char const **var, char const *value, char const *option)
+230c164
+< @@ -1159,7 +1159,7 @@ compare_files (struct comparison const *
+---
+> @@ -1159,7 +1159,7 @@ compare_files (struct comparison const *parent,
+239,243c173,238
+< Only in diffutils-3.0-patch: diff.o
+< diff -pru diffutils-3.0/dir.c diffutils-3.0-patch/dir.c
+< --- diffutils-3.0/dir.c	2018-06-08 13:41:31.740793000 -0700
+< +++ diffutils-3.0-patch/dir.c	2018-06-08 13:39:04.407400000 -0700
+< @@ -154,7 +154,7 @@ compare_names (char const *name1, char c
+---
+> diff --git a/src/diff3.c b/src/diff3.c
+> index 0f11fdc..f27b76e 100644
+> --- a/src/diff3.c
+> +++ b/src/diff3.c
+> @@ -316,9 +316,9 @@ main (int argc, char **argv)
+>    if (argc - optind != 3)
+>      {
+>        if (argc - optind < 3)
+> -	try_help ("missing operand after `%s'", argv[argc - 1]);
+> +	try_help ("missing operand after '%s'", argv[argc - 1]);
+>        else
+> -	try_help ("extra operand `%s'", argv[optind + 3]);
+> +	try_help ("extra operand '%s'", argv[optind + 3]);
+>      }
+>  
+>    file = &argv[optind];
+> @@ -351,7 +351,7 @@ main (int argc, char **argv)
+>  	 file instead.  */
+>        common = 3 - common;
+>        if (STREQ (file[0], "-") || STREQ (file[common], "-"))
+> -	fatal ("`-' specified for more than one input file");
+> +	fatal ("'-' specified for more than one input file");
+>      }
+>  
+>    mapping[0] = 0;
+> @@ -412,7 +412,7 @@ try_help (char const *reason_msgid, char const *operand)
+>    if (reason_msgid)
+>      error (0, 0, _(reason_msgid), operand);
+>    error (EXIT_TROUBLE, 0,
+> -	 _("Try `%s --help' for more information."), program_name);
+> +	 _("Try '%s --help' for more information."), program_name);
+>    abort ();
+>  }
+>  
+> @@ -435,7 +435,7 @@ static char const * const option_help_msgid[] = {
+>    "",
+>    N_("-m  --merge  Output merged file instead of ed script (default -A)."),
+>    N_("-L LABEL  --label=LABEL  Use LABEL instead of file name."),
+> -  N_("-i  Append `w' and `q' commands to ed scripts."),
+> +  N_("-i                          append 'w' and 'q' commands to ed scripts"),
+>    N_("-a  --text  Treat all files as text."),
+>    N_("--strip-trailing-cr  Strip trailing carriage return on input."),
+>    N_("-T  --initial-tab  Make tabs line up by prepending a tab."),
+> @@ -460,7 +460,7 @@ usage (void)
+>      else
+>        putchar ('\n');
+>    printf ("\n%s\n%s\n",
+> -	  _("If a FILE is `-', read standard input."),
+> +	  _("If a FILE is '-', read standard input."),
+>  	  _("Exit status is 0 if successful, 1 if conflicts, 2 if trouble."));
+>    emit_bug_reporting_address ();
+>  }
+> @@ -1475,7 +1475,7 @@ undotlines (FILE *outputfile, bool leading_dot, long int start, lin num)
+>     around the problems involved with changing line numbers in an ed
+>     script.
+>  
+> -   As in `output_diff3', the variable MAPPING maps from file number
+> +o   As in 'output_diff3', the variable MAPPING maps from file number
+>     according to the argument list to file number according to the diff
+>     passed.  All files listed below are in terms of the argument list.
+>     REV_MAPPING is the inverse of MAPPING.
+> diff --git a/src/dir.c b/src/dir.c
+> index 5b4eaec..5e08318 100644
+> --- a/src/dir.c
+> +++ b/src/dir.c
+> @@ -154,7 +154,7 @@ compare_names (char const *name1, char const *name2)
+252,264c247,251
+< Only in diffutils-3.0-patch: dir.o
+< Only in diffutils-3.0-patch: ed.o
+< Only in diffutils-3.0-patch: ifdef.o
+< Only in diffutils-3.0-patch: io.o
+< Only in diffutils-3.0-patch: Makefile
+< Only in diffutils-3.0-patch: Makefile.in
+< Only in diffutils-3.0-patch: normal.o
+< Only in diffutils-3.0-patch: paths.h
+< Only in diffutils-3.0-patch: sdiff
+< diff -pru diffutils-3.0/sdiff.c diffutils-3.0-patch/sdiff.c
+< --- diffutils-3.0/sdiff.c	2018-06-08 13:41:31.753780000 -0700
+< +++ diffutils-3.0-patch/sdiff.c	2018-06-08 13:39:04.415398000 -0700
+< @@ -175,7 +175,7 @@ try_help (char const *reason_msgid, char
+---
+> diff --git a/src/sdiff.c b/src/sdiff.c
+> index 4344e8d..5bbecd8 100644
+> --- a/src/sdiff.c
+> +++ b/src/sdiff.c
+> @@ -175,7 +175,7 @@ try_help (char const *reason_msgid, char const *operand)
+282c269
+< @@ -286,12 +286,12 @@ check_child_status (int werrno, int wsta
+---
+> @@ -286,12 +286,12 @@ check_child_status (int werrno, int wstatus, int max_ok_status,
+311,315c298,301
+< Only in diffutils-3.0-patch: sdiff.o
+< Only in diffutils-3.0-patch: side.o
+< diff -pru diffutils-3.0/util.c diffutils-3.0-patch/util.c
+< --- diffutils-3.0/util.c	2018-06-08 13:41:31.762771000 -0700
+< +++ diffutils-3.0-patch/util.c	2018-06-08 13:39:04.421399000 -0700
+---
+> diff --git a/src/util.c b/src/util.c
+> index 3be03e9..d18bf38 100644
+> --- a/src/util.c
+> +++ b/src/util.c
+333,334d318
+< Only in diffutils-3.0-patch: util.o
+< Only in diffutils-3.0-patch: *vc-diff*~
+
+
+
+ 

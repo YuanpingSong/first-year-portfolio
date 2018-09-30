@@ -1,0 +1,22 @@
+--- lib/timespec.h	2018-05-06 13:44:41.921786000 -0700
++++ lib/timespec.h	2018-05-06 13:46:07.218461000 -0700
+@@ -45,8 +45,17 @@
+ static inline int
+ timespec_cmp (struct timespec a, struct timespec b)
+ {
+-  int diff = a.tv_sec - b.tv_sec;
+-  return diff ? diff : a.tv_nsec - b.tv_nsec;
++    if (a.tv_sec < b.tv_sec) {
++        return -1;
++    } else if (a.tv_sec > b.tv_sec) {
++        return 1;
++    } else if (a.tv_nsec < b.tv_nsec) {
++        return -1;
++    } else if (a.tv_nsec > b.tv_nsec) {
++        return 1;
++    } else {
++        return 0;
++    }
+ }
+ 
+ # if ! HAVE_DECL_NANOSLEEP

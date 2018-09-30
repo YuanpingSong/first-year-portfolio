@@ -1,0 +1,29 @@
+2. The first twelve Coords popped off the stack were:
+Coord 1: (4, 3)
+Coord 2: (3, 3)
+Coord 3: (5, 3)
+Coord 4: (5, 2)
+Coord 5: (5, 1)
+Coord 6: (6, 1)
+Coord 7: (7, 1)
+Coord 8: (8, 1)
+Coord 9: (8, 2)
+Coord 10: (6, 3)
+Coord 11: (4, 4)
+Coord 12: (4, 5)
+
+4. The first twelve Coords popped off the queue were:
+Coord 1: (4, 3)
+Coord 2: (4, 4)
+Coord 3: (5, 3)
+Coord 4: (3, 3)
+Coord 5: (4, 5)
+Coord 6: (6, 3)
+Coord 7: (5, 2)
+Coord 8: (4, 6)
+Coord 9: (5, 5)
+Coord 10: (5, 1)
+Coord 11: (4, 7)
+Coord 12: (6, 5)
+
+The two algorithms are different in that the version implemented by a stack visits the most recently discovered coordinates first (a.k.a. depth first search), where as the version implemented using a queue visits the longest-known coordinates first (a.k.a. breadth first search). This is because stack is last-in-first-out data structure and queue is a first-in-first-out data structure.

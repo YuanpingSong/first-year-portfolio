@@ -1,0 +1,73 @@
+1. 
+a.
+                               50
+
+                         20            60
+
+                 10          40            70
+
+                   15      30          65      80
+
+                         25  36               74
+
+b.
+In-order: 
+10 15 20 25 30 36 40 50 60 65 70 74 80
+Pre-order:
+50 20 10 15 40 30 25 36 60 70 65 80 74
+Post-order:
+15 10 25 36 30 40 20 65 74 80 70 60 50
+
+c.
+                               50
+
+                         15            60
+
+                 10          40            70
+
+                           25          65      80
+
+                             36               74
+
+2. 
+a.
+struct Node {
+    Node *parent, *left, *right;
+    int m_val;
+};
+b.
+
+insertInorder(subTreePtr: BinaryNodePointer, newNodePtr: BinaryNOdePointer) : BinaryNodePointer
+	if(subTreePtr is nullptr)
+		return newNodePtr
+	else if (subTreePtr -> m_val > newNodePtr -> m_val) {
+		newNodePtr -> parent = subTreePtr
+		tempPtr = insertInoder(subTreePtr -> left, newNodePtr)
+		subTreePtr -> left = tempPtr
+	} else {
+		newNodePtr -> parent = subTreePtr
+		tempPtr = insertInoder(subTreePtr -> right, newNodePtr)
+		subTreePtr -> right = tempPtr
+	}
+	return subTreePtr
+
+3.
+a.
+
+		8
+	3		6
+     0     2         4
+b.
+836024
+c.
+63402
+
+4.
+a. O(C + S)
+b. O(log C + S)
+c. O(log C + log S)
+d. O(log S)
+e. O(1)
+f. O(log C + S)
+g. O(S log S)
+h. O(C log S)

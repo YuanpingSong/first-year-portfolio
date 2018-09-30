@@ -1,0 +1,163 @@
+1.
+A.
+
+Bugs: 
+int main()
+{
+    int arr[3] = { 5, 10, 15 };
+    int* ptr = arr;
+    
+    *ptr = 30;
+    *ptr + 1 = 20;      // the dereference operator has higher precedence than the addition operator. The result of the epression on the left hand side of the assignment operator is an r-value and hence unassignable.
+    ptr += 2;
+    ptr[0] = 10;
+    
+    while (ptr >= arr)
+    {
+        ptr--;
+        cout << *ptr << endl;    // logic error. ptr is not the one-off-the-end pointer so the loop should print first instead of decrementing first. Furthermore, the loop is traversing the array in the wrong direction.
+    }
+}
+
+Fix:
+
+int main()
+{
+    int arr[3] = { 5, 10, 15 };
+    int* ptr = arr;
+    
+    *ptr = 30;
+    *(ptr + 1) = 20;
+    ptr += 2;
+    ptr[0] = 10;
+    
+    for (ptr = arr; ptr < arr + 3; ptr++) {
+        cout << *ptr << endl;
+    }
+}
+
+B.
+The function fails to behave as expected because pToMax is passed to it by value. Even though findMax finds the position of the maximum in the array, it couldn’t communicate this data with the main routine, leaving ptr uninitialized. A fix to this bug is declaring pToMax as a reference to a pointer to int. i.e.:
+New function declaration: void findMax(int arr[], int n, int*& pToMax)
+The rest of the program need not be changed. 
+
+C.
+
+In the main routine, ptr is left uninitialized at the time of function call to computeCube. The random memory location ptr is pointing to is passed by value to the function, which attempts to dereference it, resulting in undefined behavior. (In Xcode, an uninitialized pointer is default initialized with the value nullptr. Still, it is illegal to dereference a null pointer.)
+Fix: 
+int main() {
+    int cube;
+    int * ptr = &cube;
+    computeCube(5, ptr);
+    cout << "Five cubed is " << *ptr << endl;
+}
+
+D. 
+The problem is that this implementation used pointers where, in fact, the objects which those pointers are referring to are desired. Here is a fix for this problem:
+
+bool strequal(const char str1[], const char str2[])
+{
+    while (*str1 != 0  &&  *str2 != 0)
+    {
+        if (*str1 != *str2)  // compare corresponding characters
+            return false;
+        str1++;            // advance to the next character
+        str2++;
+    }
+    return *str1 == *str2;   // both ended at same time?
+}
+
+E.
+The program allowed anArray, a variable local to the getPtrArray function, to go out of scope yet still expected to use it in the main routine. The problem is that the compiler does not know that the programmer still has a pointer to this array and reallocates the memory upon the invocation of f(). So we get seemingly incomprehensible garbage values as output. 
+
+2.
+
+a.    double *cat;
+b.    double mouse[5];
+c.    cat = &mouse[4];
+d.    *cat = 25;
+e.    *(mouse + 3) = 42;
+f.    cat -= 3;
+g.    cat[1] = 54;
+h.    cat[0] = 27;
+i.    bool b = ( *cat == *(cat + 1) );
+j.    bool d = ( cat == mouse );
+
+3.
+
+a.
+double mean(const double* scores, int numScores)
+{
+    
+    double tot = 0;
+    for (int i = 0; i < numScores; i++) {
+        tot += *(scores + i);
+    }
+    return tot/numScores;
+}
+
+b.
+const char* findTheChar(const char *str, char chr)
+{
+    for (int i = 0; *(str + i) != 0; i++) {
+        if ( *(str + i) == chr ) {
+            return (str + i);
+        }
+    }
+    return nullptr;
+}
+
+c.
+
+const char* findTheChar(const char *str, char chr)
+{
+    for (; *str != 0; str++) {
+        if ( *str == chr ) {
+            return str;
+        }
+    }
+    return nullptr;
+}
+
+4.
+
+Explanation of the program:
+maxwell: given two pointers to int, returns a copy of the one which points to the greater int value. Returns b if the values of the ints those pointers refer to are equal. 
+swap1: does nothing because the arguments are local variables. Assigning to them has no effect outside of the function’s local scope. 
+swap2: given two pointers to int, exchanges the values of the ints they are referring to. 
+Main:
+Declare and initialize an array of six ints ( { 5, 3, 4, 17, 22, 19} )
+Initialize ptr to the first element of array.
+set the first element of the array to -1
+Advance ptr by 2 ints (now it’s pointing to the int at position 2, or the third element)
+Set the element after the element referred to by ptr (position 3, fourth element) to 9
+Set the second element in the array to 79
+Print the distance between the last element of the array (pos 5, sixth element) and ptr (pos 2, third  element) The output is 3 followed by a newline. 
+Do nothing 
+Exchange the first element (pos 0) of the array and the third element of the array (pos 2)
+Print each element in the array on its own line, in order. 
+
+One can conclude from the above explanation that the content of the array by the end of the program is { 4, 79, -1, 9, 22, 19 }
+
+
+Therefore, the output is:
+3 // distance between the final position of ptr and the last element array
+4 // elements of the array
+79
+-1
+9
+22
+19
+
+5.
+
+void removeS (char *param) {
+    for (; *param != 0; param++) {
+        if (*param == 's' || *param == 'S') {
+            for (char *it = param; *it != 0; it++) {
+                *it = *(it + 1);
+            }
+            param--;
+        }
+    }
+}

@@ -1,0 +1,258 @@
+Name: Yuanping Song
+UID: 
+Lab 5
+
+I first created a trival c program that computes and outputs cos(sqrt(3.0))
+in the format specified in the assignment: the source code of the program is
+as follows: 
+
+#include <stdio.h>
+#include <math.h>
+
+int main(int argc, const char * argv[]) {
+    
+    printf("%.17g", cos(sqrt(3.0)) );
+    return 0;
+}
+
+the file is named trivial.c. To compile my this program, I use:
+
+$ gcc -o trivial trivial.c
+
+running this program outputs: -0.16055653857469052
+
+use ldd to investigate which shared libraries are required: 
+
+$ ldd trivial
+
+the output is: 
+	linux-vdso.so.1 =>  (0x00007ffd7bb26000)
+	libc.so.6 => /lib64/libc.so.6 (0x000000380bc00000)
+	/lib64/ld-linux-x86-64.so.2 (0x000000380b800000)
+
+$ strace ./trivial
+
+the output is:
+execve("./trivial", ["./trivial"], [/* 39 vars */]) = 0
+brk(0)                                  = 0x1297000
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fb9d3699000
+access("/etc/ld.so.preload", R_OK)      = -1 ENOENT (No such file or directory)
+open("/etc/ld.so.cache", O_RDONLY)      = 3
+fstat(3, {st_mode=S_IFREG|0644, st_size=156770, ...}) = 0
+mmap(NULL, 156770, PROT_READ, MAP_PRIVATE, 3, 0) = 0x7fb9d3672000
+close(3)                                = 0
+open("/lib64/libc.so.6", O_RDONLY)      = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0000\356\301\v8\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=1930416, ...}) = 0
+mmap(0x380bc00000, 3750184, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x380bc00000
+mprotect(0x380bd8a000, 2097152, PROT_NONE) = 0
+mmap(0x380bf8a000, 24576, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_DENYWRITE, 3, 0x18a000) = 0x380bf8a000
+mmap(0x380bf90000, 14632, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x380bf90000
+close(3)                                = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fb9d3671000
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fb9d3670000
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fb9d366f000
+arch_prctl(ARCH_SET_FS, 0x7fb9d3670700) = 0
+mprotect(0x380bf8a000, 16384, PROT_READ) = 0
+mprotect(0x380ba20000, 4096, PROT_READ) = 0
+munmap(0x7fb9d3672000, 156770)          = 0
+fstat(1, {st_mode=S_IFCHR|0620, st_rdev=makedev(136, 3), ...}) = 0
+mmap(NULL, 4096, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0) = 0x7fb9d3698000
+write(1, "-0.16055653857469052", 20-0.16055653857469052)    = 20
+exit_group(0)                           = ?
++++ exited with 0 +++
+
+The correspondence between the outputs of the ldd program and the strace program
+is this: libc.so.6 => /lib64/libc.so.6 (0x000000380bc00000) means that my program
+requires machine code from libc.so.6. The ldd program went on a dynamic look up
+for it and found it at /lib64/libc.so.6 on the linux server, and it also informs
+me that this dynamic library is copied to memory address at 0x000000380bc00000. 
+I see matching system calls that carries out the above steps in the executable: 
+
+open("/lib64/libc.so.6", O_RDONLY)      = 3
+read(3, "\177ELF\2\1\1\3\0\0\0\0\0\0\0\0\3\0>\0\1\0\0\0000\356\301\v8\0\0\0"..., 832) = 832
+fstat(3, {st_mode=S_IFREG|0755, st_size=1930416, ...}) = 0
+mmap(0x380bc00000, 3750184, PROT_READ|PROT_EXEC, MAP_PRIVATE|MAP_DENYWRITE, 3, 0) = 0x380bc00000
+mprotect(0x380bd8a000, 2097152, PROT_NONE) = 0
+
+$ ls /usr/bin | awk 'NR%101==xxxxxxxxx%101' | wc -l
+
+I obtained the list: 
+amidi
+bunzip2
+compile_et
+dbiproxy
+enc2xs
+fixpspps
+gimp-console
+gouldtoppm
+gucharmap
+htstat
+jmap
+kioslave
+lastlog
+lzmainfo
+mogrify
+newaliases
+pactl
+pbm2lex
+pg_dumpall
+plasma-desktop
+ppmddumpfont
+psset
+rename
+run-with-aspell
+sip
+sudoreplay
+tiffcmp
+vptovf
+xmkmf
+zmore
+
+using a shell script to process the list:
+
+#!/bin/bash
+
+for x in "$(ls /usr/bin | awk 'NR%101==304947334%101')"; do
+
+    y="which $x"
+    ldd $y
+done
+
+and using a pipe line to process output to get the list:
+
+$ ~/Desktop/cs35l/lab8/lab/lab.sh | grep so| cut -f1 -d "=" | sort -u
+
+
+	/lib64/ld-linux-x86-64.so.2 (0x000000380b800000)
+	libacl.so.1 
+	libasound.so.2 
+	libattr.so.1 
+	libbabl-0.1.so.0 
+	libbz2.so.1 
+	libcairo.so.2 
+	libcom_err.so.2 
+	libcrypto.so.10 
+	libcrypt.so.1 
+	libc.so.6 
+	libdb-4.7.so 
+	libdbus-1.so.3 
+	libdl.so.2 
+	libdrm.so.2 
+	libenchant.so.1 
+	libexpat.so.1 
+	libfam.so.0 
+	libfontconfig.so.1 
+	libfreebl3.so 
+	libfreetype.so.6 
+	libgcc_s.so.1 
+	libgdk_pixbuf-2.0.so.0 
+	libgegl-0.1.so.0 
+	libgimpbase-2.0.so.0 
+	libgimpcolor-2.0.so.0 
+	libgimpconfig-2.0.so.0 
+	libgimpmath-2.0.so.0 
+	libgimpmodule-2.0.so.0 
+	libgimpthumb-2.0.so.0 
+	libgio-2.0.so.0 
+	libglapi.so.0 
+	libglib-2.0.so.0 
+	libGL.so.1 
+	libgmodule-2.0.so.0 
+	libgobject-2.0.so.0 
+	libgomp.so.1 
+	libgpm.so.2 
+	libgssapi_krb5.so.2 
+	libgthread-2.0.so.0 
+	libICE.so.6 
+	libjpeg.so.62 
+	libk5crypto.so.3 
+	libkdecore.so.5 
+	libkdeui.so.5 
+	libkeyutils.so.1 
+	libkfile.so.4 
+	libkio.so.5 
+	libknewstuff2.so.4 
+	libkpathsea.so.4 
+	libkrb5.so.3 
+	libkrb5support.so.0 
+	liblber-2.4.so.2 
+	liblcms.so.1 
+	libldap-2.4.so.2 
+	libltdl.so.7 
+	liblzma.so.0 
+	libMagickCore.so.5 
+	libMagickWand.so.5 
+	libm.so.6 
+	libmysqlclient.so.16 
+	libnetpbm.so.10 
+	libnsl.so.1 
+	libnspr4.so 
+	libnss3.so 
+	libnssutil3.so 
+	libopenjpeg.so.2 
+	libpango-1.0.so.0 
+	libpangoft2-1.0.so.0 
+	libpcre.so.0 
+	libperl.so 
+	libphonon.so.4 
+	libpixman-1.so.0 
+	libplasma.so.3 
+	libplc4.so 
+	libplds4.so 
+	libpng12.so.0 
+	libpoppler.so.5 
+	libproc-3.2.8.so 
+	libpthread.so.0 
+	libQtCore.so.4 
+	libQtDBus.so.4 
+	libQtGui.so.4 
+	libQtNetwork.so.4 
+	libQtOpenGL.so.4 
+	libQtSvg.so.4 
+	libQtXml.so.4 
+	libresolv.so.2 
+	librt.so.1 
+	libsasl2.so.2 
+	libselinux.so.1 
+	libsmime3.so 
+	libSM.so.6 
+	libsolid.so.4 
+	libsoprano.so.4 
+	libssl3.so 
+	libssl.so.10 
+	libstdc++.so.6 
+	libstreamanalyzer.so.0 
+	libstreams.so.0 
+	libthreadweaver.so.4 
+	libtiff.so.3 
+	libtinfo.so.5 
+	libutil.so.1 
+	libuuid.so.1 
+	libX11.so.6 
+	libX11-xcb.so.1 
+	libXau.so.6 
+	libxcb-dri2.so.0 
+	libxcb-glx.so.0 
+	libxcb.so.1 
+	libXcursor.so.1 
+	libXdamage.so.1 
+	libXdmcp.so.6 
+	libXext.so.6 
+	libXfixes.so.3 
+	libXft.so.2 
+	libXinerama.so.1 
+	libXi.so.6 
+	libxml2.so.2 
+	libXpm.so.4 
+	libXrandr.so.2 
+	libXrender.so.1 
+	libXt.so.6 
+	libXtst.so.6 
+	libXxf86vm.so.1 
+	libz.so.1 
+	linux-vdso.so.1 
+
+There is an error accessing gpasswd because it is an administrator tool. 
+
+

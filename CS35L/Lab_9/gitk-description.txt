@@ -1,0 +1,17 @@
+Yuanping Song
+UID: 
+Lab 5
+
+The three connected windows on top displays information regarding the
+version history of the repository. Specifically, the subwindow on the 
+right diagrams the history of commits and merges, together with short
+commit messages, to give users an overall idea and to help them orient
+themselves. The middle pane shows the contact information of the author
+of each commit. The rightmost window shows the date when the commit is 
+out. Below are numbers that such as the hash of the commit and the total
+number of commits in the project. 
+
+The bottom right subwindow demonstrates text information of the actual 
+effect of each commit. It displays changes in the diff format, with 
+helpful highlights. To the right is a large pane which serves to inform
+the user regarding the structure of the patch file. 

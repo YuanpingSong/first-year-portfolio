@@ -1,0 +1,378 @@
+1. I implemented Map using a hand-written doubly-linked list. Each node is defined by a private struct, consisting of four members: a prev pointer to node, a next pointer to node, a key data member of type KeyType, and a value data member of type ValueType. The Map class maintains a pointer to the first node of the list and another pointer to the last node of the list. So this implementation of doubly-linked list is not circular. Since each node has pointers to it neighbors, this is all the Maps class needs in order to traverse the list. When empty, Map does not create a dummy node, instead, it uses the condition head == tail == nullptr as the test for emptiness. In order to offer fast algorithmic performance, the Map class maintains all of its nodes in dictionary alphabetical order, as determined by string comparison.
+
+2. Pseudocode:
+
+~Map:
+Obtain an iterator which starts at head
+While iterator has not reached the end of the list
+	create pointer p equals iterator
+	advance the iterator
+	delete object referred to by p
+
+operator=:
+If we are assigning to self
+	do nothing
+Else 
+	deallocate dynamic memory associated with current obj (see destructor for steps)
+	set head and tail to nullptr
+	iterate through the nodes in source
+		dynamically allocate a copy and insert into current obj.
+Return a pointer to current object
+
+Size:
+Obtain an iterator which starts at head
+Create counter variable
+While iterator has not reached the end of the list
+	increment counter
+	advance iterator
+Return count.
+
+Insert: 
+If key is already in the Map
+	return false
+Else if Map is Empty
+	call insertIntoEmptyMap (see bellow)
+Else 
+	Obtain an iterator which starts at head
+	iterate until we’ve reached the end or the current node’s key is greater than the key provided
+		if we stop at the first node
+			call insertAtFront (see bellow)
+		if we reach the end
+			call insertAtBack (see bellow)
+		else
+			insert new node before the node referred to by iterator
+			return true
+
+Update: 
+If key is not in map
+	return false
+else 
+	obtain index of the targeted node (see bellow for indexOf)
+	Obtain an iterator which starts at head and advance to the targeted node
+	update the value of that node 
+	return true
+
+InsertOrUpdate
+If key is in Map
+	call update
+If key is not in Map
+	call insert
+
+Erase 
+Decide based on the value returned by indexOf
+If key is not in Map
+	return false
+Else if targeted node is first node
+	call eraseAtFront (see bellow)
+Else 
+	Obtain an iterator which starts at head and advance to the targeted node
+	if we reach the last node
+		call eraseAtBack (see bellow)
+	rewire the nodes before and after the targeted node
+	delete the targeted node
+	return true
+
+bool Map::get(const KeyType& key, ValueType& value) const
+Decide based on the value returned by indexOf
+If key is not in map
+	return false
+Else 
+	traverse the list to the targeted node and obtain its value.
+
+bool Map::get(int i, KeyType& key, ValueType& value) const
+If I is out of range
+	return false
+Else
+	use an iterator to access the ith node
+	pass the key and value of the node out of the function 
+	return true
+
+Swap:
+Perform the three point swap for head and tail private members.
+
+indexOf:
+Obtain an iterator which stats at head
+initialize counter variable to 0
+While iterator has not reached the end
+	if the current node’s key equals the key we are looking for
+		return counter
+	increment counter
+	advance iterator
+Return a certain global constant to signify failure 
+
+
+insertIntoEmtpyMap
+If Map is empty
+	Create a new node the key and value of which are the arguments to this function and which 	has nullptrs as head and tail.
+	point head and tail to this node
+	Return true
+Else
+	return false
+
+InsertAtBack
+if the map is not empty
+	create new node with given key and value. Also set the node’s prev to tail and next to nullptr
+	rewire the node referred to by tail
+	point tail to the new node
+	return true;
+Else 
+	return false;
+
+InsertAtFront
+if the map is not empty
+	create new node with given key and value. Also set the node’s next to head and prev to nullptr
+	rewire the node referred to by head
+	point head to the new node
+	return true;
+Else 
+	return false;
+
+eraseOnly:
+If map is not empty and contain only one node
+	delete the node 
+	set head, tail to nullptr
+	return true
+Else 
+	return false
+
+earseAtFront:
+If Map is empty
+	return false
+Else if it contains only one element
+	call eraseOnly
+Else 
+	obtain a pointer to the frist node
+	set head to the second node
+	set head’s prev to nullptr
+	delete the (former) first node
+	return true
+
+earseAtBack:
+If Map is empty
+	return false
+Else if it contains only one element
+	call eraseOnly
+Else 
+	obtain a pointer to the last node
+	set tail to the second to last node
+	set tail’s next to nullptr
+	delete the (former) last node
+	return true
+
+
+Combine:
+create temporary map variable
+initialize temporary boolean variable to true
+Insert all elements in m1 to temporary map variable
+Attempt to insert all elements in m2 to temporary map variable
+	when we encounter a duplicate
+		if values are the same 
+			do nothing
+		else 
+			remove the affected key-value pair from temporary map variable
+			set the bool to be returned to false
+Set result to temp map 
+Return bool
+
+Subtract:
+create temporary map variable
+	iterate over the elements in m1
+		if m2 contains the same element
+			continue
+		insert this key-value pair into temp Map
+Set result to temp Map
+
+3. Test Cases
+
+
+#include <iostream>
+#include <string>
+#include <cassert>
+#include <cstdlib>
+#include <time.h>
+using namespace std;
+#include "Map.h"
+
+int main(int argc, const char * argv[]) {
+    
+    
+    string keyArr[] = {"Alpha", "Bravo", "Charlie", "Delta", "Echo", "Foxtrot", "Gulf", "Hotel", "India", "Juliet", "Kilo", "Lima", "Mike", "November", "Oscar", "Papa", "Quebec", "Romeo", "Sierra", "Tango", "Uniform", "Victor", "Whiskey", "Xray", "Yankee", "Zulu" };
+    
+    // default contructor
+    Map myMap;
+    assert(myMap.size() == 0);
+    assert(myMap.empty());
+    assert(!myMap.erase("Ricky"));
+    
+    // Copy Constructor
+    Map mySecondMap(myMap);
+    assert(mySecondMap.size() == 0);
+    assert(mySecondMap.empty());
+    assert(!mySecondMap.erase("Ricky"));
+    // insert or update will always succeed;
+    for (int i = 0; i < 10000; i++) {
+        assert(mySecondMap.insertOrUpdate(keyArr[i % 26], i));
+    }
+    
+    // empty map can be assigned
+    mySecondMap = myMap;
+    assert(mySecondMap.size() == 0);
+    assert(mySecondMap.empty());
+    assert(!mySecondMap.erase("Ricky"));
+    // insert 26 elements into map
+    for (int i = 0; i < 26; i++) {
+        assert(myMap.insert(keyArr[i], i));
+    }
+    // Map should not allow duplicate keys
+    for (int i = 0; i < 26; i++) {
+        assert(!myMap.insert(keyArr[i], i));
+    }
+    
+    // the following code tests combine
+    int cutOff = 12;
+    
+    Map subMap1;
+    for (int i = 0; i < cutOff; i++) {
+        subMap1.insert(keyArr[i], i);
+    }
+    
+    Map subMap2;
+    for (int i = cutOff; i < 26; i++) {
+        subMap2.insert(keyArr[i], i);
+    }
+    Map result;
+    // combining two non-overlapping maps should always succeed.
+    assert(combine(subMap1, subMap2, result));
+    
+    // checks if result is indeed the union of two submaps
+    for (int i = 0; i < 26; i++) {
+        assert(result.contains(keyArr[i]));
+    }
+    subMap1.insert(keyArr[25], 12);
+    
+    // submaps contain conflicting key-value pairs, combine should return false
+    assert(!combine(subMap1, subMap2, result));
+    
+    // the conflicted key should be removed from result
+    assert(!result.contains(keyArr[25]));
+    
+    // the other keys should make it into result
+    for (int i = 0; i < 25; i++) {
+        assert(result.contains(keyArr[i]));
+    }
+    
+    // resolve the cause of the conflict
+    assert(subMap1.update(keyArr[25], 25));
+    assert(combine(subMap1, subMap2, result) && result.size() == 26 && result.contains(keyArr[25]));
+    
+    // the following code tests subtract
+    subtract(result, subMap2, result);
+    assert(result.size() == 12);
+    for (int i = 0; i < 12; i++) {
+        assert(result.contains(keyArr[i]));
+    }
+    
+    // the following code tests the validity of Map's implementation
+    
+    //#define GET_ITERATION_TEST
+#ifdef GET_ITERATION_TEST
+    Map m;
+    m.insert("A", 10);
+    m.insert("B", 44);
+    m.insert("C", 10);
+    string all;
+    double total = 0;
+    for (int n = 0; n < m.size(); n++)
+    {
+        string k;
+        double v;
+        m.get(n, k, v);
+        all += k;
+        total += v;
+    }
+    cout << all << total;
+#endif
+    
+    //#define GET_CONSISTENCY_TEST
+#ifdef GET_CONSISTENCY_TEST
+    Map gpas;
+    gpas.insert("Fred", 2.956);
+    gpas.insert("Ethel", 3.538);
+    double v;
+    string k1;
+    assert(gpas.get(1,k1,v)  &&  (k1 == "Fred"  ||  k1 == "Ethel"));
+    string k2;
+    assert(gpas.get(1,k2,v)  &&  k2 == k1);
+#endif
+    
+    //#define EMPTY_STRING_TEST
+#ifdef EMPTY_STRING_TEST
+    Map gpas;
+    gpas.insert("Fred", 2.956);
+    assert(!gpas.contains(""));
+    gpas.insert("Ethel", 3.538);
+    gpas.insert("", 4.000);
+    gpas.insert("Lucy", 2.956);
+    assert(gpas.contains(""));
+    gpas.erase("Fred");
+    assert(gpas.size() == 3  &&  gpas.contains("Lucy")  &&  gpas.contains("Ethel")  &&
+           gpas.contains(""));
+#endif
+    
+    //#define SWAP_TEST
+#ifdef SWAP_TEST
+    Map m1;
+    m1.insert("Fred", 2.956);
+    Map m2;
+    m2.insert("Ethel", 3.538);
+    m2.insert("Lucy", 2.956);
+    m1.swap(m2);
+    assert(m1.size() == 2  &&  m1.contains("Ethel")  &&  m1.contains("Lucy")  &&
+           m2.size() == 1  &&  m2.contains("Fred"));
+#endif
+    
+    //#define STRING_TO_DOUBLE_TEST
+#ifdef STRING_TO_DOUBLE_TEST
+    Map m;  // maps strings to doubles
+    assert(m.empty());
+    ValueType v = -1234.5;
+    assert( !m.get("abc", v)  &&  v == -1234.5); // v unchanged by get failure
+    m.insert("xyz", 9876.5);
+    assert(m.size() == 1);
+    KeyType k = "hello";
+    assert(m.get(0, k, v)  &&  k == "xyz"  &&  v == 9876.5);
+    cout << "Passed all tests" << endl;
+    // assignment operator test;
+    Map newM = m;
+    newM.dump();
+    // copy constructor test
+    Map nnewM(m);
+    nnewM.dump();
+    
+#endif
+    
+    
+    //#define TEST_N
+#ifdef TEST_N
+    Map m;
+    assert(m.insert("Fred", 2.956));
+    assert(m.insert("Ethel", 3.538));
+    assert(m.size() == 2);
+    ValueType v = 42;
+    assert(!m.get("Lucy", v)  &&  v == 42);
+    assert(m.get("Fred", v)  &&  v == 2.956);
+    v = 42;
+    KeyType x = "Lucy";
+    assert(m.get(0, x, v)  &&
+           ((x == "Fred"  &&  v == 2.956)  ||  (x == "Ethel"  &&  v == 3.538)));
+    KeyType x2 = "Ricky";
+    assert(m.get(1, x2, v)  &&
+           ((x2 == "Fred"  &&  v == 2.956)  ||  (x2 == "Ethel"  &&  v == 3.538))  &&
+           x != x2);
+#endif
+    
+    
+    
+}
+
+	

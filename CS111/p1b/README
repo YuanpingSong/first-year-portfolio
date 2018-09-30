@@ -1,0 +1,61 @@
+NAME: Yuanping Song
+EMAIL: yuanping.song@outlook.com
+ID: 
+SLIPDAYS: 0
+
+The files that are included in my submission are as follows:
+
+lab1b-client.c: one of the source files of my program, implements the 
+client part of the assignment. The client is capable of initiating 
+connections to the server, logging messaged transmitted over the 
+network, as well as using compression to reduce network consumption. 
+the client can access through the server a bash shell running remotly. 
+
+lab1b-server.c: One of the source files of my program, implements the 
+server part of the assignment. The server is capable of accepting
+network connections and using compression to reduce network consumption.
+The service the server provides is a bash shell runing as a child 
+process. 
+
+Makefile: script automating the building of the lab1b-client and 
+lab1b-server executables and the packaging of project files.
+
+README: this file. Contains a description of the files included in 
+the tarball as well as some general informaiton relating to my 
+submission.
+
+Design Decision:
+
+I chose to use the stream model of network socket because it is more 
+reliable and easier to use. Compared to the dgram sockets, it offers 
+the ability to ensure that no data is lost along the way, and is 
+therefore preferable in my scenario. However, this choice also poses 
+some difficulty in the implementation of data compression because zlib
+compress messages into discreet packets and does not easiliy adapt to 
+a stream model. When server is returning a long stream of compressed 
+data to client through the socket, the client sometimes has difficulty
+discerning where one message ends and the next begins. To address this 
+issue, One can cause the server to send data at a slower rate, giving 
+client a greater chance of correctly segmenting the stream of data. 
+However, this is not a perfect fix, as its success depends on network
+conditions. One can also conceivably delve deep into the format of zlib
+messages, and be able to distinguish messages using header information.
+This approach, however, is too involved. Lastly, one may implement some
+interation between the client and the server where the server does not
+send the next message down the socket before client has completely read
+the previous message and sent back an acknowlegement. This approach 
+simulates a dgram socket but without its downside of data loss. But it 
+instead suffers from higher overhead, greater latency, and therefore 
+reduced bandwidth, which kinda of defeats our compression scheme. So,
+I decided to leave the choice to the user. Compression works best when
+each message is less than 512b.
+
+
+Research:
+
+While implementing this program, I extensively consulted the man pages of
+Socket and Zlib as well as tutorial for each at: 
+http://www.cs.rpi.edu/~moorthy/Courses/os98/Pgms/socket.html
+https://zlib.net/zlib_how.html
+
+

@@ -1,0 +1,29 @@
+NAME: Yuanping Song
+EMAIL: yuanping.song@outlook.com
+ID: 
+SLIPDAYS: 0
+
+S/N: BBGW18040138
+MAC: 2CF7F1068F89
+
+The files that are included in my submission are as follows:
+
+my_beaglebone.jpg: A picture of me smilingly holding my beaglebone. 
+
+build_run.png: A picture showing an ssh session over the wifi to my beaglebone in which I, as the root user, compiled and executed a trivial c program I previously uploaded to the device. 
+
+connected.png: A picture of an ssh session over the USB. I ran the hostname command to show that I correctly changed the hostname of my beaglebone to xxxxxxxxx.lasr.cs.ucla.edu, and then ran the ifconfig command to show that my beaglebone is connected to internet over WIFI.
+
+copy.png: A picture showing a command line session from my laptop in which I transfered a trivial c program to the beaglebone using scp. 
+
+git.png: A picture of an ssh session over the wifi to my beaglebone demonstrating that git is correctly installed. I cloned one of my own repositories from github. 
+
+Makefile: script automating the packaging of lab4a project files.
+
+README: this file. Contains a description of the files included in 
+the tarball as well as some device-specific informaiton relating to my 
+Beaglebone
+
+
+
+

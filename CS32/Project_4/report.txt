@@ -1,0 +1,9 @@
+1.
+The program has been tested with the harness and has no known issue
+2.
+MyHash was implemented as an open hash take, with an dynamically allocated array holding a container of Node pointers. Each bucket is meant to hold a head pointer to a linked list. 
+Tokenizer used a string to store the separators.
+Translator uses a Hash table of associations using string as key and a vector of string as value. 
+Decrypter delegates work to the other classes so it does not itself implement any data structure.
+3.
+The implementation of the methods conforms to the Big O requirement in the specification.
