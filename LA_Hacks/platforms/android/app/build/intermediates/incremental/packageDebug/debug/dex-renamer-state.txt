@@ -1,0 +1,4 @@
+#Sun Apr 01 12:19:27 PDT 2018
+base.0=/Users/yuanpingsong/Desktop/LA_APP_Final/commit2/platforms/android/app/build/intermediates/transforms/dexMerger/debug/0
+renamed.0=classes.dex
+file.0=/Users/yuanpingsong/Desktop/LA_APP_Final/commit2/platforms/android/app/build/intermediates/transforms/dexMerger/debug/0/classes.dex

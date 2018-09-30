@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <title>CommitTwo</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom fonts for this template -->
+    <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:100,200,300,400,500,600,700,800,900" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="vendor/devicons/css/devicons.min.css" rel="stylesheet">
+    <link href="vendor/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/resume.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css"/>
+  </head>
+
+  <body id="page-top">
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+      <a class="navbar-brand js-scroll-trigger" href="#page-top">
+        <span class="d-block d-lg-none">CommitTwo</span>
+        <span class="d-none d-lg-block">
+          <img class="img-fluid img-profile rounded-circle mx-auto mb-2" src="img/profile.jpg" alt="">
+        </span>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#register">Register</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#manage-account">Manage Account</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#friends">Friends</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#create-goal">Create Goal</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="#current-goals">Current Goals</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container-fluid p-0">
+
+    <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="about">
+        <div class="my-auto">
+          <h2 class="mb-5">Commit to a new you!</h2>
+          <p>
+          CommitTwo is designed to help two individuals achieve mutually shared goals by tying the success of the two together. Each individual will gain points when they or their partner make steps productive to their goal and likewise, both partners lose points when they or their partner engage in activity counterproductive to their goal.
+          </p>
+          <p>
+            As partners accumulate points, they become eligible for rewards.  Beneficial and Detrimental action is dependent on the duo's shared goal. For example, if the teammates goal is to avoid unhealthy foods, they would get points for eating at healthy restaurants, but lose points if either of them chose to eat a meal at a fast food restaurant. Additionally, when the team members commit to each other, they also agree to check in and log their actions at a certain frequency, also dependent on the specific goal. A check in simply requires that the team member open the app at a certain time or frequency, thereby allowing for verification that they are staying true to their commitment. If the team member does not fulfill this check in requirement, both they and their partner automatically lose points, regardless of whether they actually kept their commitment. As each partner makes an effort to help their teammate succeed, they will ultimately end up succeeding themselves!
+          </p>
+          <p>
+            CommitTwo users may directly choose to their partner if they have a friend working towards a shared goal. For users who are not directly selecting their partner, CommitTwo will find an individual of a similar age and residence to be their partner. Additionally, as users spend more time selecting rewards, CommitTwo is able to learn more about the users interests and pair together individuals with shared interests and hobbies. Not only can CommitTwo be a great way to reach your goals, but it becomes an opportunity to meet friends along the way!  
+          </p>
+          <div class="resume-item d-flex flex-column flex-md-row mb-5">
+            <h2 class="mb-5">Quick Demo</h2>
+            <div class="resume-content mr-auto">
+              <h3 class="mb-0">Points: <span id="my-points">?</span></h3>
+              <div id="demo-cat-radio" class="form-group">
+                <label>Now select a Category for your goal, and be there to check in! </label><br>           
+                <input type="radio" name = "cat" value="fitness">
+                <label>Fitness</label><br>
+                <input type="radio" name = "cat" value="school">
+                <label>School</label><br>
+                <input type="radio" name = "cat" value="experience">
+                <label>Experience</label><br>             
+              </div>            
+              <button id="checkin-submit" type="button" class="btn btn-primary">Check In</button>
+              <div id="venue-holder">
+                <script id="venue-tmpl" type="text/template">
+                  <div class="card venueBlock">
+                    <div class="venueDetails card-body">
+                      <div class="venueName">
+                        <h2><a>{{name}}</a></h2>
+                      </div>
+                      <div class="venueMeta">
+                        <div class="venueAddressData">
+                          <div class="venueDistance">{{distance}} m</div>
+                          <div class="venueAddress">{{address}}</div>
+                          <div class="venueData">
+                            <span class="venueDataItem">
+                              <span class="categoryName">{{category}}</span>
+                              <span class="delim"> • </span>
+                            </span>
+                            <a class="deny-location text-secondary">Not where I am.</a>
+                            <a class="accept-location text-primary">I'm here!</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </script>           
+              </div>
+              <div class="col-xs-12" style="height:20px;"></div>
+			  </div></div></div>
+      </section>
+
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="login">
+        <div class="my-auto">
+          <h2 class="mb-5">Login</h2>
+          <div class="resume-item d-flex flex-column flex-md-row mb-5">
+            <div class="resume-content mr-auto">
+              <div class="form-group">
+                <label>Email</label>
+                <input id="login-email" type="email" class="form-control" placeholder="Enter Username" name="email" required>
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input id="login-password" type="password" class="form-control" placeholder="Enter Password" name="password" required>
+              </div>
+              <button id = "login-forgot-pwd" type="button" class="btn btn-secondary">Forgot password?</button>
+              <button id="login-submit" type="button" class="btn btn-primary">Submit</button>
+              <div class="col-xs-12" style="height:20px;"></div>
+			  </div></div></div>
+      </section>
+
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="register">
+        <div class="my-auto">
+          <h2 class="mb-5">Register</h2>
+          <div class="resume-item d-flex flex-column flex-md-row mb-5">
+            <div class="resume-content mr-auto">
+                <h4 class="info-text"> Let's start with a photo</h4>                 
+                <div class="picture-container">
+                  <div class="picture">
+                      <img src="assets/img/default-avatar.png" class="picture-src" id="wizardPicturePreview" title="" alt ="" />
+                      <input type="file" id="register-portrait-submit">
+                  </div>
+                  <h6>Choose Picture</h6>
+                </div>
+            </div>
+          </div>
+            <h4>Basic Information</h4>
+          <div class="resume-item d-flex flex-column flex-md-row mb-5">
+            <div class="form-group">
+              <label>First Name <small>(required)</small></label>
+              <input id="register-firstname" name="firstname" type="text" class="form-control" placeholder="Andrew...">
+            </div>
+            <div class="form-group">
+              <label>Last Name <small>(required)</small></label>
+              <input id="register-lastname" name="lastname" type="text" class="form-control" placeholder="Smith...">
+            </div>                          
+            <div class="form-group">
+                <label>Email <small>(required)</small></label>
+                <input id="register-email" name="email" type="email" class="form-control" placeholder="andrew@example.com">
+            </div>
+			  
+		</div>
+            <!--                 
+            <div class="tab-pane" id="account">
+                <h4 class="info-text"> Select a goal </h4>
+                <div class="row">
+
+                    <div class="choice" data-toggle="wizard-checkbox">
+                        <input type="checkbox" name="task" value="nutrition">
+                        <label>Become a healthier eater</label>
+                    </div>
+                </div>
+            </div>
+                -->
+          
+          <h4 class="info-text"> Information that helps us to find a partner for you</h4>
+          <div class="resume-item d-flex flex-column flex-md-row mb-5">
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label>Your zip code</label>
+                  <input id="register-zip" name= "zip-code" type="text" class="form-control">
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="phone-number">Phone number</label>
+                  <input id="register-phone" name = "phone_num" type="text" class="form-control" placeholder="123-456-7890">
+                </div>
+              </div>
+              <div id="register-age-radio" class="form-group">
+                <label>Now select your age </label><br>
+                
+                <input type="radio" name = "age" value="18-24">
+                <label>18-24</label><br>
+                <input type="radio" name = "age" value="25-35">
+                <label>25-35</label><br>
+                <input type="radio" name = "age" value="36-50">
+                <label>36-50</label><br>
+                <input type="radio" name = "age" value = "50+">
+                <label>50+</label><br>
+                
+              </div>
+
+			</div></div>
+          <button id="register-submit" type="button" class="btn btn-primary">Submit</button>
+      </section>
+
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="manage-account">
+        <div class="my-auto">
+          <h2 class="mb-5">Manage Account</h2>
+          <div class="resume-item d-flex flex-column flex-md-row mb-5">
+            <div class="resume-content mr-auto">
+              <h3 class="mb-0">username: {}</h3><br>
+              <h3 class="mb-0">password: {}</h3><br>
+              <h3 class="mb-0">points: {}</h3>
+              <h3 class="mb-0">available rewards: {}</h3><br>
+              <input id="reward-button" type="button" name="collect" value="Collect Reward" /><br>
+              <div class="col-xs-12" style="height:20px;"></div>
+              <input id="unfriend-button" type = "button" name ="end friendship" value = "End Friendship"/>
+          	</div>
+		  </div>
+		 </div>
+      </section>
+
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="friends">
+        <div class="my-auto">
+          <h2 class="mb-5">Your Friends</h2>
+          <h4 class = "mb-0">Message to {} </h4>
+          <textarea rows="8" cols="50"></textarea><br>
+          <input id="message-send-button" type = "button" name ="message" value ="Send"/>
+        </div>
+      </section>
+
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="create-goal">
+        <div class="my-auto">
+          <h2 class="mb-5">Create A Goal</h2>
+          <div id="goal-form">
+            <div class="form-group">
+              <label for="inputAddress">Title</label>
+              <input id="goal-title" type="text" class="form-control" placeholder="1234 Main St">
+            </div>
+            <div class="form-group">
+              <label for="inputAddress2">Description</label>
+              <input id="goal-description" type="text" class="form-control" placeholder="Apartment, studio, or floor">
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="inputEmail4">Time</label>
+                <input id="goal-time" type="number" class="form-control" placeholder="Email">
+              </div>
+              <div class="form-group col-md-6">
+                <label for="inputPassword4">Date</label>
+                <input id="goal-date" type="text" class="form-control" placeholder="Password">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-6">
+                <label for="inputCity">City</label>
+                <input id="goal-city" type="text" class="form-control" >
+              </div>
+              <div class="form-group col-md-4">
+                <label for="inputState">State</label>
+                <select id="goal-state" class="form-control">
+                  <option selected>Choose...</option>
+                  <option>...</option>
+                </select>
+              </div>
+              <div class="form-group col-md-2">
+                <label for="inputZip">Zip</label>
+                <input id="goal-zip" type="text" class="form-control" >
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="form-check">
+                <input id="marketing-checkbox" class="form-check-input" type="checkbox">
+                <label class="form-check-label" for="gridCheck">
+                  I would like to receive information regarding your awesome app!
+                </label>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Sign in</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="resume-section p-3 p-lg-5 d-flex flex-column" id="current-goals">
+        <div class="my-auto">
+          <h2 class="mb-5">Current Goals d-flex flex-column flex-md-row</h2>
+          <div class="resume-item goal-container mb-5">
+            <script id="goal-card-tmpl" type="text/template">
+              <div class="card goal-card" goal-id="{{goalId}}">
+              <div class="card-body">
+                <h5 class="card-title">{{goalTitle}}</h5>
+                <p class="card-text">{{goalDescription}}</p>
+              </div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">{{goalFrequency}}</li>
+                <li class="list-group-item">{{goalTime}}</li>
+                <li class="list-group-item">{{goalCategory}}</li>
+              </ul>
+              <div class="card-body">
+                <a class="card-link goal-check-in">Check In</a>
+                <a class='card-link goal-give-up'>Give Up</a>
+              </div>
+              </div> 
+            </script>
+          </div>
+		 </div>
+    </section>
+    </div>
+
+    <!-- Bootstrap core JavaScript -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Plugin JavaScript -->
+    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
+    <script src="js/handlebars.js"></script>
+    <!-- Custom scripts for this template -->
+    <script src="js/resume.min.js"></script>
+    <script src="js/events.js"></script>
+
+  </body>
+
+</html>
