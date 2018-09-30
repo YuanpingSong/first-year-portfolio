@@ -1,0 +1,3 @@
+# CodeSprint LA
+
+Competitive programming contest by ACM-ICPC. Also my first experience with competitive programming. I am happy that I performed just as well as many other players despite not having taken an algorithms class (I took CS180 during summer). For the team round, our three-person team included me and Kirill Dubovitsky. Our team placed 7th. Some questions from the team round are also included in the repository. 

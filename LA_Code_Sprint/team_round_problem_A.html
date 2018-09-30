@@ -1,0 +1,56 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.4.1/github-markdown.min.css">
+  <style>
+.markdown-body {
+        box-sizing: border-box;
+        min-width: 200px;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 45px;
+    }
+  </style>
+
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({tex2jax: {
+inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+}});
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
+  <title> Problem A </title></head>
+<body>
+<div class="markdown-body">
+<h1>Aimbot</h1>
+<p>You have recently start playing FPS (first person shooter) games with your friends. After trying out a few of the most popular FPS games (like fortG, pubWATCH, and overNITE), one thing is for sure, you are awful at aiming. </p>
+<p>Now, you can spend months and months incrementally improving your aim, but the amateur tournament that your friends had to sign up for is tomorrow so you decided to write a program to improve your aiming overnight. </p>
+<p>Your first aimbot looked into the game memory to find the X, Y, and Z location of the player and shot direct at the user. This program seems very intuitive, but you noticed that the shots often missed the target. Eventually, you figured out that your program did not take in account the direction the target was moving and the time it takes for the bullet to get to the target. </p>
+<p>It is too late to find the memory location that contains the player's movements and add that to the aimbot, because tournament begins in 1 hour. As of now the aimbot is performing poorly so you decide to calibrate it by trial and error.</p>
+<p>For each shot your programs fires, you record whether the shot misses the target to the left, misses the target to the right, or hits the target for each of the X, Y, and Z axis. For simplicity, you only consider the X axis, since other dimensions can be adjusted by repeating the process. Specifically for each test case, you create a string (representating the shots your aimbot fires for that test) where each &quot;L&quot; in the string means that the shot was missed to the left, &quot;H&quot; is a hit, and &quot;R&quot; means that the shot was missed to the right. </p>
+<p>During each test, the aim will be calibrated to a particular direction after $k$ consecutive misses. This means that if $k = 3$, after 3 misses to the left the aim will be adjusted 1 unit to the right and the counter is reset.</p>
+<p>You want know where your aim is calibrated to be after each test for future improvements. Note that negative values indicate that the aim is calibrate to the left and postive values is to the right. </p>
+<h3>Input</h3>
+<p>The first line contains $t(1 \leq t \leq 100)$ -- number of test cases</p>
+<p>For each test case:</p>
+<p>The first line contains numbers $n$ and $k$ where $(2 \leq k \leq n \leq 10000)$ -- the number of shots fired (length of the string) and the number of times missed in a particular direction before adjusting</p>
+<p>The second line contains a string $str$ -- whether each shot hit the target &quot;H&quot;, missed left of the target &quot;L&quot;, or missed right of the target &quot;R&quot;</p>
+<h3>Output</h3>
+<p>For each test case, print one integer representing the how far left or right the aim is after each test.</p>
+<h3>Example</h3>
+<h4>Sample Input</h4>
+<pre><code>1
+12 3
+RRRHHLLLRRRR</code></pre>
+<h4>Sample Output</h4>
+<pre><code>-1</code></pre>
+<h4>Explanation</h4>
+<p>Explanation: First, the aimbot missed 3 times to the right meaning that we had to adjust our aimbot 1 unit to the left. Then it missed 3 times to the left changing the aim back to 0 (neutral). Finally, it misses 4 times to the right meaning that we need to adjust our aim 1 unit to the left. The final result is -1 (the final aim is calibrated 1 unit to the left)</p></div>
+
+</body>
+</html>

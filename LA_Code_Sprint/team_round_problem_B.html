@@ -1,0 +1,73 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.4.1/github-markdown.min.css">
+  <style>
+.markdown-body {
+        box-sizing: border-box;
+        min-width: 200px;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 45px;
+    }
+  </style>
+
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({tex2jax: {
+inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+}});
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
+  <title> Problem B </title></head>
+<body>
+<div class="markdown-body">
+<h1>Spam Ping</h1>
+<p>You are a toxic player, and have been chat restricted! Instead of freely being able to flame your team through chat, you are now only able to communicate through pings. Unfortunately, you are also limited in the amount of pings you can make, and can only ping <em>n</em> times.</p>
+<p>In order to make the best use of your <em>n</em> pings, you have analyzed your <em>t</em> teammates and researched the effectiveness of the <em>p</em> ping types. You have found that you are able to give values to your teammates that correspond with their mental instability. You have also found that you are able to give values to the different ping types that correspond with their tilting strength. By directing a ping at a certain player, you hypothesize that you are able to cause an unhappiness level equivalent to the maximum between the chosen ping strength and the chosen person's mental instability.</p>
+<p>However, if you constantly use a given ping type or target a given player, your team will begin to grow immune to your harassment. As such, every time you use a ping that ping's tilting strength is reduced by one. The same happens when you target a player, where every time you target a player their mental instability is reduced by one. Additionally, if over the course of the game a player's mental instability or a ping's tilting strength goes to 0, you are unable to use it for the rest of the game.</p>
+<p>Under these conditions, find the maximum level of unhappiness you can impart on your team.</p>
+<h4>Input</h4>
+<p>The first line contains one integer <em>c</em> (1 ≤ c ≤ 15) - the number of test cases.</p>
+<p>The second line contains three integers: <em>n, p</em>, and <em>q</em> (1 ≤ n ≤ 50000, 1 ≤ p, q ≤ 1000) - the number of pings you can use, the number of teammates you have, and the number of ping types you have at your disposal.</p>
+<p>The third line contains <em>p</em> integers a<sub>1</sub>, a<sub>2</sub>, ..., a<sub>p</sub> (1 ≤ $a_i$ ≤ 1000) the i<sup>th</sup> of them representing the i<sup>th</sup> player's mental instability level.</p>
+<p>The fourth line contains <em>q</em> integers b<sub>1</sub>, b<sub>2</sub>, ..., b<sub>q</sub> (1 ≤ b<sub>i</sub> ≤ 1000) the i-th of them representing the i-th ping type's tilting strength.</p>
+<h4>Output</h4>
+<p>Output c integers (newline-seperated) - the maximum level of unhappiness that you have caused.</p>
+<h4>Examples</h4>
+<h5>Example 1</h5>
+<h6>Input</h6>
+<pre><code>1
+5 4 4
+10 8 1 4
+2 7 11 1</code></pre>
+<h6>Output</h6>
+<pre><code>49</code></pre>
+<h5>Example 2</h5>
+<h6>Input</h6>
+<pre><code>1
+10 3 1
+1 2 3
+6</code></pre>
+<h6>Output</h6>
+<pre><code>21</code></pre>
+<h5>Example 3</h5>
+<h6>Input</h6>
+<pre><code>1
+2 2 2
+6 6 
+3 6</code></pre>
+<h6>Output</h6>
+<pre><code>12</code></pre>
+<h4>Example Explanations</h4>
+<p>For the first example, an optimal solution is to use the 1st player and 2nd ping twice, and 4th player and 3rd ping three times. If this is done, unhappiness = max(10, 7) + max(9, 6) + max(11, 4) + max(10, 3) + max(9, 2) = 10 + 9 + 11 + 10 + 9 = 49.</p>
+<p>For the second example, the optimal solution is to use the players with the first ping type. Note that when either one of them goes to zero, it is no longer to be used. If this is done, unhappiness  = max(3, 6) + max(2, 5) + max(2, 4) + max(1, 3) + max(1, 2) + max (1, 1) + N/A = 6 + 5 + 4 + 3 + 2 + 1 = 21.</p>
+<p>For the third solution, an optimal solution is to use the first player with the first ping, and the second player with the second ping. If this is done, unhappiness = max(6, 3) + max(6, 6) = 12.</p></div>
+
+</body>
+</html>

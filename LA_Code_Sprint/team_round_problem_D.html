@@ -1,0 +1,54 @@
+
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.4.1/github-markdown.min.css">
+  <style>
+.markdown-body {
+        box-sizing: border-box;
+        min-width: 200px;
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 45px;
+    }
+  </style>
+
+  <script type="text/x-mathjax-config">
+MathJax.Hub.Config({tex2jax: {
+inlineMath: [['$','$'], ['\\(','\\)']],
+    displayMath: [ ['$$','$$'], ["\\[","\\]"] ],
+}});
+  </script>
+  <script type="text/javascript" async
+    src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML">
+  </script>
+
+  <title> Problem D </title></head>
+<body>
+<div class="markdown-body">
+<h1>The Parched Games</h1>
+<p>The nation of Menap holds an annual contest known as The Parched Games, in which each the districts in the nation “volunteers” a tribute to bring glory to their district. Comrade Fire, the leader of Menap, decides he wants to add some spice to the games for the 100th anniversary. He decides he will choose k tributes who will be equipped with a shock collar that will immobilize them for 5 arbitrary consecutive minutes every hour.
+Menap has a total of n districts numbered from 1 to n, and each district i has a population of $a_i$. He has a set amount of tributes to choose. He wants to maximize the number of people affected by choosing the tributes from the districts with the highest population. However, he cannot choose tributes from adjacent districts. For example, if he chooses a tribute from district 3, then he can’t choose any tributes from district 2 or 4.
+Which tributes should Comrade Fire choose?</p>
+<h3>Input</h3>
+<p>The first line contains a single integer, t, denoting the number of test cases.</p>
+<p>For each test case, The first line of input contains two integers, n and k, the number of districts in Menap and the number of contestants Comrade Fire will choose, respectively. It's guaranteed that $( 1 \leq k &lt; n \leq 10^3 )$ where $( k \leq ceiling(n/2) )$.</p>
+<p>The second line contains n space separated integers $a_1$ to $a_n$. Each integer $a_i$, represents the population of district I $(1 \leq a_i \leq 10^3)$.</p>
+<h3>Output</h3>
+<p>Print one line for each test case. This line should be one integer, x, showing the total population affected.</p>
+<h4>Sample Input</h4>
+<pre><code>2
+6 2
+24 40 30 10 30 34
+3 2
+1 100 1</code></pre>
+<h4>Sample Output</h4>
+<pre><code>74
+2</code></pre>
+<h4>Explanation</h4>
+<p>For test case 1, the best way is to choose from districts 2 and 6 for a total population of 74.
+For test case 2, the only way to choose two tributes from the three districts is to choose from the first and third district for a total population of 2.</p></div>
+
+</body>
+</html>
