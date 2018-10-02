@@ -6,6 +6,6 @@ Shout out to ACM-Hack for hosting such an amazing event! This is my first Hackat
 
 [See my team's repository on Alex's Github](https://github.com/zhaoalex/swiperv2)
 
-[Checkout our Devpost website](https://devpost.com/software/swiperv2)
+[Check out our Devpost website](https://devpost.com/software/swiperv2)
 
 [The team dining with professor Nachenberg after winning the competition](https://www.facebook.com/photo.php?fbid=10108036631582706&set=a.633601774826&type=3)
